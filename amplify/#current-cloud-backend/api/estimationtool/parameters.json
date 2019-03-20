@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "estimationtool",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcognitobd2d0787",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "schemaGraphql": "s3://stimationool-20190320000234-deployment/amplify-appsync-files/schema.graphql.1553040593919",
+    "ResolverBucket": "stimationool-20190320000234-deployment",
+    "ResolverRootKey": "amplify-appsync-files",
+    "DeploymentTimestamp": "1553040593919"
+}
