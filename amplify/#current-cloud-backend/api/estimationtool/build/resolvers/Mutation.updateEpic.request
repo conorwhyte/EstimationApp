@@ -28,7 +28,7 @@ $util.qr($ctx.args.input.remove("expectedVersion"))
 #end
 ## Automatically set the updatedAt timestamp. **
 $util.qr($context.args.input.put("updatedAt", $util.time.nowISO8601()))
-$util.qr($context.args.input.put("__typename", "Quiz"))
+$util.qr($context.args.input.put("__typename", "Epic"))
 ## Update condition if type is @versioned **
 #if( $versionedCondition )
   $util.qr($condition.put("expression", "($condition.expression) AND $versionedCondition.expression"))

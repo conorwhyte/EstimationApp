@@ -1,24 +1,27 @@
-type Question {
-  id: ID!
-  text: String!
-  tags: [String]
-  links: [String]
-  answers(filter: ModelAnswerFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelAnswerConnection
-  version: Int!
-}
-
-type Answer {
-  id: ID!
-  text: String
-  correct: Boolean
-  question: Question
-  version: Int!
-}
-
-type Quiz {
+type Epic {
   id: ID!
   title: String!
-  questions(filter: ModelQuestionFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelQuestionConnection
+  total: Float
+  stories(filter: ModelStoryFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelStoryConnection
+  version: Int!
+}
+
+type Story {
+  id: ID!
+  title: String!
+  description: String
+  tags: [String]
+  links: [String]
+  avgEstimate: Float
+  estimates(filter: ModelEstimateFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelEstimateConnection
+  version: Int!
+}
+
+type Estimate {
+  id: ID!
+  user: String
+  estimate: Float
+  story: Story
   version: Int!
 }
 
@@ -27,8 +30,8 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelQuestionConnection {
-  items: [Question]
+type ModelEpicConnection {
+  items: [Epic]
   nextToken: String
 }
 
@@ -87,130 +90,139 @@ input ModelBooleanFilterInput {
   eq: Boolean
 }
 
-input ModelQuestionFilterInput {
+input ModelEpicFilterInput {
   id: ModelIDFilterInput
-  text: ModelStringFilterInput
-  tags: ModelStringFilterInput
-  links: ModelStringFilterInput
-  and: [ModelQuestionFilterInput]
-  or: [ModelQuestionFilterInput]
-  not: ModelQuestionFilterInput
+  title: ModelStringFilterInput
+  total: ModelFloatFilterInput
+  and: [ModelEpicFilterInput]
+  or: [ModelEpicFilterInput]
+  not: ModelEpicFilterInput
 }
 
 type Query {
-  getQuestion(id: ID!): Question
-  listQuestions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String): ModelQuestionConnection
-  getAnswer(id: ID!): Answer
-  listAnswers(filter: ModelAnswerFilterInput, limit: Int, nextToken: String): ModelAnswerConnection
-  getQuiz(id: ID!): Quiz
-  listQuizzes(filter: ModelQuizFilterInput, limit: Int, nextToken: String): ModelQuizConnection
+  getEpic(id: ID!): Epic
+  listEpics(filter: ModelEpicFilterInput, limit: Int, nextToken: String): ModelEpicConnection
+  getStory(id: ID!): Story
+  listStories(filter: ModelStoryFilterInput, limit: Int, nextToken: String): ModelStoryConnection
+  getEstimate(id: ID!): Estimate
+  listEstimates(filter: ModelEstimateFilterInput, limit: Int, nextToken: String): ModelEstimateConnection
 }
 
-input CreateQuestionInput {
+input CreateEpicInput {
   id: ID
-  text: String!
-  tags: [String]
-  links: [String]
-  quizQuestionsId: ID
+  title: String!
+  total: Float
 }
 
-input UpdateQuestionInput {
+input UpdateEpicInput {
   id: ID!
-  text: String
-  tags: [String]
-  links: [String]
-  quizQuestionsId: ID
+  title: String
+  total: Float
   expectedVersion: Int!
 }
 
-input DeleteQuestionInput {
+input DeleteEpicInput {
   id: ID
   expectedVersion: Int!
 }
 
 type Mutation {
-  createQuestion(input: CreateQuestionInput!): Question
-  updateQuestion(input: UpdateQuestionInput!): Question
-  deleteQuestion(input: DeleteQuestionInput!): Question
-  createAnswer(input: CreateAnswerInput!): Answer
-  updateAnswer(input: UpdateAnswerInput!): Answer
-  deleteAnswer(input: DeleteAnswerInput!): Answer
-  createQuiz(input: CreateQuizInput!): Quiz
-  updateQuiz(input: UpdateQuizInput!): Quiz
-  deleteQuiz(input: DeleteQuizInput!): Quiz
+  createEpic(input: CreateEpicInput!): Epic
+  updateEpic(input: UpdateEpicInput!): Epic
+  deleteEpic(input: DeleteEpicInput!): Epic
+  createStory(input: CreateStoryInput!): Story
+  updateStory(input: UpdateStoryInput!): Story
+  deleteStory(input: DeleteStoryInput!): Story
+  createEstimate(input: CreateEstimateInput!): Estimate
+  updateEstimate(input: UpdateEstimateInput!): Estimate
+  deleteEstimate(input: DeleteEstimateInput!): Estimate
 }
 
 type Subscription {
-  onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
-  onUpdateQuestion: Question @aws_subscribe(mutations: ["updateQuestion"])
-  onDeleteQuestion: Question @aws_subscribe(mutations: ["deleteQuestion"])
-  onCreateAnswer: Answer @aws_subscribe(mutations: ["createAnswer"])
-  onUpdateAnswer: Answer @aws_subscribe(mutations: ["updateAnswer"])
-  onDeleteAnswer: Answer @aws_subscribe(mutations: ["deleteAnswer"])
-  onCreateQuiz: Quiz @aws_subscribe(mutations: ["createQuiz"])
-  onUpdateQuiz: Quiz @aws_subscribe(mutations: ["updateQuiz"])
-  onDeleteQuiz: Quiz @aws_subscribe(mutations: ["deleteQuiz"])
+  onCreateEpic: Epic @aws_subscribe(mutations: ["createEpic"])
+  onUpdateEpic: Epic @aws_subscribe(mutations: ["updateEpic"])
+  onDeleteEpic: Epic @aws_subscribe(mutations: ["deleteEpic"])
+  onCreateStory: Story @aws_subscribe(mutations: ["createStory"])
+  onUpdateStory: Story @aws_subscribe(mutations: ["updateStory"])
+  onDeleteStory: Story @aws_subscribe(mutations: ["deleteStory"])
+  onCreateEstimate: Estimate @aws_subscribe(mutations: ["createEstimate"])
+  onUpdateEstimate: Estimate @aws_subscribe(mutations: ["updateEstimate"])
+  onDeleteEstimate: Estimate @aws_subscribe(mutations: ["deleteEstimate"])
 }
 
-type ModelAnswerConnection {
-  items: [Answer]
+type ModelStoryConnection {
+  items: [Story]
   nextToken: String
 }
 
-input ModelAnswerFilterInput {
-  id: ModelIDFilterInput
-  text: ModelStringFilterInput
-  correct: ModelBooleanFilterInput
-  and: [ModelAnswerFilterInput]
-  or: [ModelAnswerFilterInput]
-  not: ModelAnswerFilterInput
-}
-
-input CreateAnswerInput {
-  id: ID
-  text: String
-  correct: Boolean
-  answerQuestionId: ID
-}
-
-input UpdateAnswerInput {
-  id: ID!
-  text: String
-  correct: Boolean
-  answerQuestionId: ID
-  expectedVersion: Int!
-}
-
-input DeleteAnswerInput {
-  id: ID
-  expectedVersion: Int!
-}
-
-type ModelQuizConnection {
-  items: [Quiz]
-  nextToken: String
-}
-
-input ModelQuizFilterInput {
+input ModelStoryFilterInput {
   id: ModelIDFilterInput
   title: ModelStringFilterInput
-  and: [ModelQuizFilterInput]
-  or: [ModelQuizFilterInput]
-  not: ModelQuizFilterInput
+  description: ModelStringFilterInput
+  tags: ModelStringFilterInput
+  links: ModelStringFilterInput
+  avgEstimate: ModelFloatFilterInput
+  and: [ModelStoryFilterInput]
+  or: [ModelStoryFilterInput]
+  not: ModelStoryFilterInput
 }
 
-input CreateQuizInput {
+input CreateStoryInput {
   id: ID
   title: String!
+  description: String
+  tags: [String]
+  links: [String]
+  avgEstimate: Float
+  epicStoriesId: ID
 }
 
-input UpdateQuizInput {
+input UpdateStoryInput {
   id: ID!
   title: String
+  description: String
+  tags: [String]
+  links: [String]
+  avgEstimate: Float
+  epicStoriesId: ID
   expectedVersion: Int!
 }
 
-input DeleteQuizInput {
+input DeleteStoryInput {
+  id: ID
+  expectedVersion: Int!
+}
+
+type ModelEstimateConnection {
+  items: [Estimate]
+  nextToken: String
+}
+
+input ModelEstimateFilterInput {
+  id: ModelIDFilterInput
+  user: ModelStringFilterInput
+  estimate: ModelFloatFilterInput
+  and: [ModelEstimateFilterInput]
+  or: [ModelEstimateFilterInput]
+  not: ModelEstimateFilterInput
+}
+
+input CreateEstimateInput {
+  id: ID
+  user: String
+  estimate: Float
+  estimateStoryId: ID
+}
+
+input UpdateEstimateInput {
+  id: ID!
+  user: String
+  estimate: Float
+  estimateStoryId: ID
+  expectedVersion: Int!
+}
+
+input DeleteEstimateInput {
   id: ID
   expectedVersion: Int!
 }

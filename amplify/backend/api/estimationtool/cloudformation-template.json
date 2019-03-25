@@ -111,14 +111,617 @@
                 }
             }
         },
-        "QuestionTable": {
+        "EpicTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
                     "Fn::Join": [
                         "-",
                         [
-                            "Question",
+                            "Epic",
+                            {
+                                "Fn::GetAtt": [
+                                    "GraphQLAPI",
+                                    "ApiId"
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "KeySchema": [
+                    {
+                        "AttributeName": "id",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "id",
+                        "AttributeType": "S"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "WriteCapacityUnits": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    }
+                },
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
+        },
+        "EpicIAMRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "EpicTable",
+                            "role",
+                            {
+                                "Fn::GetAtt": [
+                                    "GraphQLAPI",
+                                    "ApiId"
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "appsync.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyName": "DynamoDBAccess",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "dynamodb:BatchGetItem",
+                                        "dynamodb:BatchWriteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Scan",
+                                        "dynamodb:Query",
+                                        "dynamodb:UpdateItem"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::GetAtt": [
+                                                "EpicTable",
+                                                "Arn"
+                                            ]
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                "/",
+                                                [
+                                                    {
+                                                        "Fn::GetAtt": [
+                                                            "EpicTable",
+                                                            "Arn"
+                                                        ]
+                                                    },
+                                                    "*"
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "EpicDataSource": {
+            "Type": "AWS::AppSync::DataSource",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "Name": "EpicTable",
+                "Type": "AMAZON_DYNAMODB",
+                "ServiceRoleArn": {
+                    "Fn::GetAtt": [
+                        "EpicIAMRole",
+                        "Arn"
+                    ]
+                },
+                "DynamoDBConfig": {
+                    "AwsRegion": {
+                        "Fn::Select": [
+                            3,
+                            {
+                                "Fn::Split": [
+                                    ":",
+                                    {
+                                        "Fn::GetAtt": [
+                                            "EpicTable",
+                                            "Arn"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "TableName": {
+                        "Ref": "EpicTable"
+                    }
+                }
+            },
+            "DependsOn": [
+                "EpicTable",
+                "EpicIAMRole"
+            ]
+        },
+        "GetEpicResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "EpicDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "getEpic",
+                "TypeName": "Query",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Query",
+                                                    "getEpic",
+                                                    "request",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Query",
+                                                    "getEpic",
+                                                    "response",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": "GraphQLSchema"
+        },
+        "ListEpicResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "EpicDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "listEpics",
+                "TypeName": "Query",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Query",
+                                                    "listEpics",
+                                                    "request",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Query",
+                                                    "listEpics",
+                                                    "response",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": "GraphQLSchema"
+        },
+        "CreateEpicResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "EpicDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "createEpic",
+                "TypeName": "Mutation",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Mutation",
+                                                    "createEpic",
+                                                    "request",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Mutation",
+                                                    "createEpic",
+                                                    "response",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": "GraphQLSchema"
+        },
+        "UpdateEpicResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "EpicDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "updateEpic",
+                "TypeName": "Mutation",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Mutation",
+                                                    "updateEpic",
+                                                    "request",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Mutation",
+                                                    "updateEpic",
+                                                    "response",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": "GraphQLSchema"
+        },
+        "DeleteEpicResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "EpicDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "deleteEpic",
+                "TypeName": "Mutation",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Mutation",
+                                                    "deleteEpic",
+                                                    "request",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Mutation",
+                                                    "deleteEpic",
+                                                    "response",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": "GraphQLSchema"
+        },
+        "StoryTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "Story",
                             {
                                 "Fn::GetAtt": [
                                     "GraphQLAPI",
@@ -140,7 +743,7 @@
                         "AttributeType": "S"
                     },
                     {
-                        "AttributeName": "quizQuestionsId",
+                        "AttributeName": "epicStoriesId",
                         "AttributeType": "S"
                     }
                 ],
@@ -157,10 +760,10 @@
                 },
                 "GlobalSecondaryIndexes": [
                     {
-                        "IndexName": "gsi-Quiz.questions",
+                        "IndexName": "gsi-Epic.stories",
                         "KeySchema": [
                             {
-                                "AttributeName": "quizQuestionsId",
+                                "AttributeName": "epicStoriesId",
                                 "KeyType": "HASH"
                             }
                         ],
@@ -179,14 +782,14 @@
                 ]
             }
         },
-        "QuestionIAMRole": {
+        "StoryIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
                     "Fn::Join": [
                         "-",
                         [
-                            "QuestionTable",
+                            "StoryTable",
                             "role",
                             {
                                 "Fn::GetAtt": [
@@ -230,7 +833,7 @@
                                     "Resource": [
                                         {
                                             "Fn::GetAtt": [
-                                                "QuestionTable",
+                                                "StoryTable",
                                                 "Arn"
                                             ]
                                         },
@@ -240,7 +843,7 @@
                                                 [
                                                     {
                                                         "Fn::GetAtt": [
-                                                            "QuestionTable",
+                                                            "StoryTable",
                                                             "Arn"
                                                         ]
                                                     },
@@ -256,7 +859,7 @@
                 ]
             }
         },
-        "QuestionDataSource": {
+        "StoryDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
@@ -265,11 +868,11 @@
                         "ApiId"
                     ]
                 },
-                "Name": "QuestionTable",
+                "Name": "StoryTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "QuestionIAMRole",
+                        "StoryIAMRole",
                         "Arn"
                     ]
                 },
@@ -282,7 +885,7 @@
                                     ":",
                                     {
                                         "Fn::GetAtt": [
-                                            "QuestionTable",
+                                            "StoryTable",
                                             "Arn"
                                         ]
                                     }
@@ -291,16 +894,16 @@
                         ]
                     },
                     "TableName": {
-                        "Ref": "QuestionTable"
+                        "Ref": "StoryTable"
                     }
                 }
             },
             "DependsOn": [
-                "QuestionTable",
-                "QuestionIAMRole"
+                "StoryTable",
+                "StoryIAMRole"
             ]
         },
-        "GetQuestionResolver": {
+        "GetStoryResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -311,11 +914,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuestionDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getQuestion",
+                "FieldName": "getStory",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -337,7 +940,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "getQuestion",
+                                                    "getStory",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -371,7 +974,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "getQuestion",
+                                                    "getStory",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -388,7 +991,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "ListQuestionResolver": {
+        "ListStoryResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -399,11 +1002,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuestionDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listQuestions",
+                "FieldName": "listStories",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -425,7 +1028,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "listQuestions",
+                                                    "listStories",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -459,7 +1062,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "listQuestions",
+                                                    "listStories",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -476,7 +1079,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "CreateQuestionResolver": {
+        "CreateStoryResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -487,11 +1090,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuestionDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createQuestion",
+                "FieldName": "createStory",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -513,7 +1116,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "createQuestion",
+                                                    "createStory",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -547,7 +1150,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "createQuestion",
+                                                    "createStory",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -564,7 +1167,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "UpdateQuestionResolver": {
+        "UpdateStoryResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -575,11 +1178,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuestionDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updateQuestion",
+                "FieldName": "updateStory",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -601,7 +1204,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "updateQuestion",
+                                                    "updateStory",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -635,7 +1238,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "updateQuestion",
+                                                    "updateStory",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -652,7 +1255,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "DeleteQuestionResolver": {
+        "DeleteStoryResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -663,11 +1266,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuestionDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deleteQuestion",
+                "FieldName": "deleteStory",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -689,7 +1292,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "deleteQuestion",
+                                                    "deleteStory",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -723,7 +1326,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "deleteQuestion",
+                                                    "deleteStory",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -740,14 +1343,14 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "AnswerTable": {
+        "EstimateTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
                     "Fn::Join": [
                         "-",
                         [
-                            "Answer",
+                            "Estimate",
                             {
                                 "Fn::GetAtt": [
                                     "GraphQLAPI",
@@ -769,7 +1372,7 @@
                         "AttributeType": "S"
                     },
                     {
-                        "AttributeName": "answerQuestionId",
+                        "AttributeName": "estimateStoryId",
                         "AttributeType": "S"
                     }
                 ],
@@ -786,10 +1389,10 @@
                 },
                 "GlobalSecondaryIndexes": [
                     {
-                        "IndexName": "gsi-QuestionChoices",
+                        "IndexName": "gsi-Estimations",
                         "KeySchema": [
                             {
-                                "AttributeName": "answerQuestionId",
+                                "AttributeName": "estimateStoryId",
                                 "KeyType": "HASH"
                             }
                         ],
@@ -808,14 +1411,14 @@
                 ]
             }
         },
-        "AnswerIAMRole": {
+        "EstimateIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
                     "Fn::Join": [
                         "-",
                         [
-                            "AnswerTable",
+                            "EstimateTable",
                             "role",
                             {
                                 "Fn::GetAtt": [
@@ -859,7 +1462,7 @@
                                     "Resource": [
                                         {
                                             "Fn::GetAtt": [
-                                                "AnswerTable",
+                                                "EstimateTable",
                                                 "Arn"
                                             ]
                                         },
@@ -869,7 +1472,7 @@
                                                 [
                                                     {
                                                         "Fn::GetAtt": [
-                                                            "AnswerTable",
+                                                            "EstimateTable",
                                                             "Arn"
                                                         ]
                                                     },
@@ -885,7 +1488,7 @@
                 ]
             }
         },
-        "AnswerDataSource": {
+        "EstimateDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
@@ -894,11 +1497,11 @@
                         "ApiId"
                     ]
                 },
-                "Name": "AnswerTable",
+                "Name": "EstimateTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "AnswerIAMRole",
+                        "EstimateIAMRole",
                         "Arn"
                     ]
                 },
@@ -911,7 +1514,7 @@
                                     ":",
                                     {
                                         "Fn::GetAtt": [
-                                            "AnswerTable",
+                                            "EstimateTable",
                                             "Arn"
                                         ]
                                     }
@@ -920,16 +1523,16 @@
                         ]
                     },
                     "TableName": {
-                        "Ref": "AnswerTable"
+                        "Ref": "EstimateTable"
                     }
                 }
             },
             "DependsOn": [
-                "AnswerTable",
-                "AnswerIAMRole"
+                "EstimateTable",
+                "EstimateIAMRole"
             ]
         },
-        "GetAnswerResolver": {
+        "GetEstimateResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -940,11 +1543,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "AnswerDataSource",
+                        "EstimateDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getAnswer",
+                "FieldName": "getEstimate",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -966,7 +1569,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "getAnswer",
+                                                    "getEstimate",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1000,7 +1603,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "getAnswer",
+                                                    "getEstimate",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1017,7 +1620,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "ListAnswerResolver": {
+        "ListEstimateResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1028,11 +1631,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "AnswerDataSource",
+                        "EstimateDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listAnswers",
+                "FieldName": "listEstimates",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -1054,7 +1657,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "listAnswers",
+                                                    "listEstimates",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1088,7 +1691,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "listAnswers",
+                                                    "listEstimates",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1105,7 +1708,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "CreateAnswerResolver": {
+        "CreateEstimateResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1116,11 +1719,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "AnswerDataSource",
+                        "EstimateDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createAnswer",
+                "FieldName": "createEstimate",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -1142,7 +1745,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "createAnswer",
+                                                    "createEstimate",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1176,7 +1779,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "createAnswer",
+                                                    "createEstimate",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1193,7 +1796,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "UpdateAnswerResolver": {
+        "UpdateEstimateResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1204,11 +1807,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "AnswerDataSource",
+                        "EstimateDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updateAnswer",
+                "FieldName": "updateEstimate",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -1230,7 +1833,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "updateAnswer",
+                                                    "updateEstimate",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1264,7 +1867,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "updateAnswer",
+                                                    "updateEstimate",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1281,7 +1884,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "DeleteAnswerResolver": {
+        "DeleteEstimateResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1292,11 +1895,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "AnswerDataSource",
+                        "EstimateDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deleteAnswer",
+                "FieldName": "deleteEstimate",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -1318,7 +1921,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "deleteAnswer",
+                                                    "deleteEstimate",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1352,7 +1955,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "deleteAnswer",
+                                                    "deleteEstimate",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1369,170 +1972,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "QuizTable": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-                "TableName": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            "Quiz",
-                            {
-                                "Fn::GetAtt": [
-                                    "GraphQLAPI",
-                                    "ApiId"
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "KeySchema": [
-                    {
-                        "AttributeName": "id",
-                        "KeyType": "HASH"
-                    }
-                ],
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "id",
-                        "AttributeType": "S"
-                    }
-                ],
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": {
-                        "Ref": "DynamoDBModelTableReadIOPS"
-                    },
-                    "WriteCapacityUnits": {
-                        "Ref": "DynamoDBModelTableWriteIOPS"
-                    }
-                },
-                "StreamSpecification": {
-                    "StreamViewType": "NEW_AND_OLD_IMAGES"
-                }
-            }
-        },
-        "QuizIAMRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "RoleName": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            "QuizTable",
-                            "role",
-                            {
-                                "Fn::GetAtt": [
-                                    "GraphQLAPI",
-                                    "ApiId"
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": "appsync.amazonaws.com"
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
-                },
-                "Policies": [
-                    {
-                        "PolicyName": "DynamoDBAccess",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "dynamodb:BatchGetItem",
-                                        "dynamodb:BatchWriteItem",
-                                        "dynamodb:PutItem",
-                                        "dynamodb:DeleteItem",
-                                        "dynamodb:GetItem",
-                                        "dynamodb:Scan",
-                                        "dynamodb:Query",
-                                        "dynamodb:UpdateItem"
-                                    ],
-                                    "Resource": [
-                                        {
-                                            "Fn::GetAtt": [
-                                                "QuizTable",
-                                                "Arn"
-                                            ]
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                "/",
-                                                [
-                                                    {
-                                                        "Fn::GetAtt": [
-                                                            "QuizTable",
-                                                            "Arn"
-                                                        ]
-                                                    },
-                                                    "*"
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        "QuizDataSource": {
-            "Type": "AWS::AppSync::DataSource",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "Name": "QuizTable",
-                "Type": "AMAZON_DYNAMODB",
-                "ServiceRoleArn": {
-                    "Fn::GetAtt": [
-                        "QuizIAMRole",
-                        "Arn"
-                    ]
-                },
-                "DynamoDBConfig": {
-                    "AwsRegion": {
-                        "Fn::Select": [
-                            3,
-                            {
-                                "Fn::Split": [
-                                    ":",
-                                    {
-                                        "Fn::GetAtt": [
-                                            "QuizTable",
-                                            "Arn"
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "TableName": {
-                        "Ref": "QuizTable"
-                    }
-                }
-            },
-            "DependsOn": [
-                "QuizTable",
-                "QuizIAMRole"
-            ]
-        },
-        "GetQuizResolver": {
+        "EpicstoriesResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1543,12 +1983,12 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuizDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getQuiz",
-                "TypeName": "Query",
+                "FieldName": "stories",
+                "TypeName": "Epic",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
                         "",
@@ -1568,8 +2008,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Query",
-                                                    "getQuiz",
+                                                    "Epic",
+                                                    "stories",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1602,8 +2042,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Query",
-                                                    "getQuiz",
+                                                    "Epic",
+                                                    "stories",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1620,7 +2060,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "ListQuizResolver": {
+        "StoryestimatesResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1631,12 +2071,12 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuizDataSource",
+                        "EstimateDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listQuizzes",
-                "TypeName": "Query",
+                "FieldName": "estimates",
+                "TypeName": "Story",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
                         "",
@@ -1656,8 +2096,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Query",
-                                                    "listQuizzes",
+                                                    "Story",
+                                                    "estimates",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1690,8 +2130,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Query",
-                                                    "listQuizzes",
+                                                    "Story",
+                                                    "estimates",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1708,7 +2148,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "CreateQuizResolver": {
+        "EstimatestoryResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -1719,12 +2159,12 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "QuizDataSource",
+                        "StoryDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createQuiz",
-                "TypeName": "Mutation",
+                "FieldName": "story",
+                "TypeName": "Estimate",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
                         "",
@@ -1744,8 +2184,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Mutation",
-                                                    "createQuiz",
+                                                    "Estimate",
+                                                    "story",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -1778,448 +2218,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Mutation",
-                                                    "createQuiz",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "UpdateQuizResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "QuizDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "updateQuiz",
-                "TypeName": "Mutation",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Mutation",
-                                                    "updateQuiz",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Mutation",
-                                                    "updateQuiz",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "DeleteQuizResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "QuizDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "deleteQuiz",
-                "TypeName": "Mutation",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Mutation",
-                                                    "deleteQuiz",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Mutation",
-                                                    "deleteQuiz",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "QuestionanswersResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "AnswerDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "answers",
-                "TypeName": "Question",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Question",
-                                                    "answers",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Question",
-                                                    "answers",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "AnswerquestionResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "QuestionDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "question",
-                "TypeName": "Answer",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Answer",
-                                                    "question",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Answer",
-                                                    "question",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "QuizquestionsResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "QuestionDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "questions",
-                "TypeName": "Quiz",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Quiz",
-                                                    "questions",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Quiz",
-                                                    "questions",
+                                                    "Estimate",
+                                                    "story",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"

@@ -1,17 +1,19 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateQuestion = `subscription OnCreateQuestion {
-  onCreateQuestion {
+export const onCreateEpic = `subscription OnCreateEpic {
+  onCreateEpic {
     id
-    text
-    tags
-    links
-    answers {
+    title
+    total
+    stories {
       items {
         id
-        text
-        correct
+        title
+        description
+        tags
+        links
+        avgEstimate
         version
       }
       nextToken
@@ -20,17 +22,19 @@ export const onCreateQuestion = `subscription OnCreateQuestion {
   }
 }
 `;
-export const onUpdateQuestion = `subscription OnUpdateQuestion {
-  onUpdateQuestion {
+export const onUpdateEpic = `subscription OnUpdateEpic {
+  onUpdateEpic {
     id
-    text
-    tags
-    links
-    answers {
+    title
+    total
+    stories {
       items {
         id
-        text
-        correct
+        title
+        description
+        tags
+        links
+        avgEstimate
         version
       }
       nextToken
@@ -39,17 +43,19 @@ export const onUpdateQuestion = `subscription OnUpdateQuestion {
   }
 }
 `;
-export const onDeleteQuestion = `subscription OnDeleteQuestion {
-  onDeleteQuestion {
+export const onDeleteEpic = `subscription OnDeleteEpic {
+  onDeleteEpic {
     id
-    text
-    tags
-    links
-    answers {
+    title
+    total
+    stories {
       items {
         id
-        text
-        correct
+        title
+        description
+        tags
+        links
+        avgEstimate
         version
       }
       nextToken
@@ -58,17 +64,82 @@ export const onDeleteQuestion = `subscription OnDeleteQuestion {
   }
 }
 `;
-export const onCreateAnswer = `subscription OnCreateAnswer {
-  onCreateAnswer {
+export const onCreateStory = `subscription OnCreateStory {
+  onCreateStory {
     id
-    text
-    correct
-    question {
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const onUpdateStory = `subscription OnUpdateStory {
+  onUpdateStory {
+    id
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const onDeleteStory = `subscription OnDeleteStory {
+  onDeleteStory {
+    id
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const onCreateEstimate = `subscription OnCreateEstimate {
+  onCreateEstimate {
+    id
+    user
+    estimate
+    story {
       id
-      text
+      title
+      description
       tags
       links
-      answers {
+      avgEstimate
+      estimates {
         nextToken
       }
       version
@@ -77,17 +148,19 @@ export const onCreateAnswer = `subscription OnCreateAnswer {
   }
 }
 `;
-export const onUpdateAnswer = `subscription OnUpdateAnswer {
-  onUpdateAnswer {
+export const onUpdateEstimate = `subscription OnUpdateEstimate {
+  onUpdateEstimate {
     id
-    text
-    correct
-    question {
+    user
+    estimate
+    story {
       id
-      text
+      title
+      description
       tags
       links
-      answers {
+      avgEstimate
+      estimates {
         nextToken
       }
       version
@@ -96,74 +169,22 @@ export const onUpdateAnswer = `subscription OnUpdateAnswer {
   }
 }
 `;
-export const onDeleteAnswer = `subscription OnDeleteAnswer {
-  onDeleteAnswer {
+export const onDeleteEstimate = `subscription OnDeleteEstimate {
+  onDeleteEstimate {
     id
-    text
-    correct
-    question {
+    user
+    estimate
+    story {
       id
-      text
+      title
+      description
       tags
       links
-      answers {
+      avgEstimate
+      estimates {
         nextToken
       }
       version
-    }
-    version
-  }
-}
-`;
-export const onCreateQuiz = `subscription OnCreateQuiz {
-  onCreateQuiz {
-    id
-    title
-    questions {
-      items {
-        id
-        text
-        tags
-        links
-        version
-      }
-      nextToken
-    }
-    version
-  }
-}
-`;
-export const onUpdateQuiz = `subscription OnUpdateQuiz {
-  onUpdateQuiz {
-    id
-    title
-    questions {
-      items {
-        id
-        text
-        tags
-        links
-        version
-      }
-      nextToken
-    }
-    version
-  }
-}
-`;
-export const onDeleteQuiz = `subscription OnDeleteQuiz {
-  onDeleteQuiz {
-    id
-    title
-    questions {
-      items {
-        id
-        text
-        tags
-        links
-        version
-      }
-      nextToken
     }
     version
   }

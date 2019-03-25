@@ -1,97 +1,19 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const getQuestion = `query GetQuestion($id: ID!) {
-  getQuestion(id: $id) {
-    id
-    text
-    tags
-    links
-    answers {
-      items {
-        id
-        text
-        correct
-        version
-      }
-      nextToken
-    }
-    version
-  }
-}
-`;
-export const listQuestions = `query ListQuestions(
-  $filter: ModelQuestionFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      text
-      tags
-      links
-      answers {
-        nextToken
-      }
-      version
-    }
-    nextToken
-  }
-}
-`;
-export const getAnswer = `query GetAnswer($id: ID!) {
-  getAnswer(id: $id) {
-    id
-    text
-    correct
-    question {
-      id
-      text
-      tags
-      links
-      answers {
-        nextToken
-      }
-      version
-    }
-    version
-  }
-}
-`;
-export const listAnswers = `query ListAnswers(
-  $filter: ModelAnswerFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      text
-      correct
-      question {
-        id
-        text
-        tags
-        links
-        version
-      }
-      version
-    }
-    nextToken
-  }
-}
-`;
-export const getQuiz = `query GetQuiz($id: ID!) {
-  getQuiz(id: $id) {
+export const getEpic = `query GetEpic($id: ID!) {
+  getEpic(id: $id) {
     id
     title
-    questions {
+    total
+    stories {
       items {
         id
-        text
+        title
+        description
         tags
         links
+        avgEstimate
         version
       }
       nextToken
@@ -100,17 +22,107 @@ export const getQuiz = `query GetQuiz($id: ID!) {
   }
 }
 `;
-export const listQuizzes = `query ListQuizzes(
-  $filter: ModelQuizFilterInput
+export const listEpics = `query ListEpics(
+  $filter: ModelEpicFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listQuizzes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listEpics(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       title
-      questions {
+      total
+      stories {
         nextToken
+      }
+      version
+    }
+    nextToken
+  }
+}
+`;
+export const getStory = `query GetStory($id: ID!) {
+  getStory(id: $id) {
+    id
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const listStories = `query ListStories(
+  $filter: ModelStoryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listStories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      tags
+      links
+      avgEstimate
+      estimates {
+        nextToken
+      }
+      version
+    }
+    nextToken
+  }
+}
+`;
+export const getEstimate = `query GetEstimate($id: ID!) {
+  getEstimate(id: $id) {
+    id
+    user
+    estimate
+    story {
+      id
+      title
+      description
+      tags
+      links
+      avgEstimate
+      estimates {
+        nextToken
+      }
+      version
+    }
+    version
+  }
+}
+`;
+export const listEstimates = `query ListEstimates(
+  $filter: ModelEstimateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listEstimates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      user
+      estimate
+      story {
+        id
+        title
+        description
+        tags
+        links
+        avgEstimate
+        version
       }
       version
     }

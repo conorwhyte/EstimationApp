@@ -1,17 +1,19 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const createQuestion = `mutation CreateQuestion($input: CreateQuestionInput!) {
-  createQuestion(input: $input) {
+export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
+  createEpic(input: $input) {
     id
-    text
-    tags
-    links
-    answers {
+    title
+    total
+    stories {
       items {
         id
-        text
-        correct
+        title
+        description
+        tags
+        links
+        avgEstimate
         version
       }
       nextToken
@@ -20,17 +22,19 @@ export const createQuestion = `mutation CreateQuestion($input: CreateQuestionInp
   }
 }
 `;
-export const updateQuestion = `mutation UpdateQuestion($input: UpdateQuestionInput!) {
-  updateQuestion(input: $input) {
+export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
+  updateEpic(input: $input) {
     id
-    text
-    tags
-    links
-    answers {
+    title
+    total
+    stories {
       items {
         id
-        text
-        correct
+        title
+        description
+        tags
+        links
+        avgEstimate
         version
       }
       nextToken
@@ -39,17 +43,19 @@ export const updateQuestion = `mutation UpdateQuestion($input: UpdateQuestionInp
   }
 }
 `;
-export const deleteQuestion = `mutation DeleteQuestion($input: DeleteQuestionInput!) {
-  deleteQuestion(input: $input) {
+export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
+  deleteEpic(input: $input) {
     id
-    text
-    tags
-    links
-    answers {
+    title
+    total
+    stories {
       items {
         id
-        text
-        correct
+        title
+        description
+        tags
+        links
+        avgEstimate
         version
       }
       nextToken
@@ -58,17 +64,82 @@ export const deleteQuestion = `mutation DeleteQuestion($input: DeleteQuestionInp
   }
 }
 `;
-export const createAnswer = `mutation CreateAnswer($input: CreateAnswerInput!) {
-  createAnswer(input: $input) {
+export const createStory = `mutation CreateStory($input: CreateStoryInput!) {
+  createStory(input: $input) {
     id
-    text
-    correct
-    question {
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const updateStory = `mutation UpdateStory($input: UpdateStoryInput!) {
+  updateStory(input: $input) {
+    id
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const deleteStory = `mutation DeleteStory($input: DeleteStoryInput!) {
+  deleteStory(input: $input) {
+    id
+    title
+    description
+    tags
+    links
+    avgEstimate
+    estimates {
+      items {
+        id
+        user
+        estimate
+        version
+      }
+      nextToken
+    }
+    version
+  }
+}
+`;
+export const createEstimate = `mutation CreateEstimate($input: CreateEstimateInput!) {
+  createEstimate(input: $input) {
+    id
+    user
+    estimate
+    story {
       id
-      text
+      title
+      description
       tags
       links
-      answers {
+      avgEstimate
+      estimates {
         nextToken
       }
       version
@@ -77,17 +148,19 @@ export const createAnswer = `mutation CreateAnswer($input: CreateAnswerInput!) {
   }
 }
 `;
-export const updateAnswer = `mutation UpdateAnswer($input: UpdateAnswerInput!) {
-  updateAnswer(input: $input) {
+export const updateEstimate = `mutation UpdateEstimate($input: UpdateEstimateInput!) {
+  updateEstimate(input: $input) {
     id
-    text
-    correct
-    question {
+    user
+    estimate
+    story {
       id
-      text
+      title
+      description
       tags
       links
-      answers {
+      avgEstimate
+      estimates {
         nextToken
       }
       version
@@ -96,74 +169,22 @@ export const updateAnswer = `mutation UpdateAnswer($input: UpdateAnswerInput!) {
   }
 }
 `;
-export const deleteAnswer = `mutation DeleteAnswer($input: DeleteAnswerInput!) {
-  deleteAnswer(input: $input) {
+export const deleteEstimate = `mutation DeleteEstimate($input: DeleteEstimateInput!) {
+  deleteEstimate(input: $input) {
     id
-    text
-    correct
-    question {
+    user
+    estimate
+    story {
       id
-      text
+      title
+      description
       tags
       links
-      answers {
+      avgEstimate
+      estimates {
         nextToken
       }
       version
-    }
-    version
-  }
-}
-`;
-export const createQuiz = `mutation CreateQuiz($input: CreateQuizInput!) {
-  createQuiz(input: $input) {
-    id
-    title
-    questions {
-      items {
-        id
-        text
-        tags
-        links
-        version
-      }
-      nextToken
-    }
-    version
-  }
-}
-`;
-export const updateQuiz = `mutation UpdateQuiz($input: UpdateQuizInput!) {
-  updateQuiz(input: $input) {
-    id
-    title
-    questions {
-      items {
-        id
-        text
-        tags
-        links
-        version
-      }
-      nextToken
-    }
-    version
-  }
-}
-`;
-export const deleteQuiz = `mutation DeleteQuiz($input: DeleteQuizInput!) {
-  deleteQuiz(input: $input) {
-    id
-    title
-    questions {
-      items {
-        id
-        text
-        tags
-        links
-        version
-      }
-      nextToken
     }
     version
   }

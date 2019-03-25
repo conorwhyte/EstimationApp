@@ -76,19 +76,6 @@ async function submitQuestionToQuiz(formattedQuestion, quizId) {
   )
 }
 
-function transformQuestion(question, quizId) {
-  return {
-    quizId: quizId,
-    quizTitle: 'Test Quiz',
-    questionText: question.question,
-    answerText1: question.correct_answer,
-    answerText2: question.incorrect_answers[0],
-    answerText3: question.incorrect_answers[1],
-    answerText4: question.incorrect_answers[2],
-    correctAnswer: question.correct_answer,
-  }
-}
-
 const GqlRetry = async (query, variables) => {
   return await retry(
     async bail => {
