@@ -5,7 +5,7 @@ import aws_exports from '../aws-exports' // specify the location of aws-exports.
 import { addQuizScore } from '../Actions/question.action'
 import { connect } from 'react-redux'
 
-import './Quiz.scss'
+import './Estimation.scss'
 import 'semantic-ui-css/semantic.min.css'
 
 Amplify.configure(aws_exports)
@@ -27,13 +27,11 @@ const mapDispatchToProps = dispatch => {
 
 class Quiz extends Component {
   render() {
-    return (
-      <div className="Quiz-body"> </div>
-    )
+    return <div className="Quiz-body"> </div>
   }
 }
 
 export default connect(
-  mapStateToProps, 
-  mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps
 )(withAuthenticator(Quiz, { includeGreetings: true }))

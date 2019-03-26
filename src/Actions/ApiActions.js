@@ -1,8 +1,8 @@
-export const QNewQuiz = `
+export const QNewEpic = `
 mutation (
   $title: String!,
   ) {
-  createQuiz(input: {
+  createEpic(input: {
     title: $title
   })
   {

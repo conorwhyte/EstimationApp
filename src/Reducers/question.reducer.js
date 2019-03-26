@@ -13,17 +13,6 @@ const initialState = {
   quizScore: '',
 }
 
-function insertItems(array, action) {
-  let newArray = array.slice()
-  newArray.splice(action.index, 0, action.questions)
-  return newArray
-}
-
-function concatArrays(array, action) {
-  let newArray = array.slice()
-  return newArray.concat(action.questions)
-}
-
 const quiz = (state = initialState, action) => {
   switch (action.type) {
     case ADD_QUIZ_QUESTIONS:
