@@ -1,9 +1,6 @@
 import retry from 'async-retry'
 import { API, graphqlOperation } from 'aws-amplify'
-import {
-  QNewEpic,
-  ListQuestions,
-} from './ApiActions'
+import { QNewEpic, ListEpicStories } from './ApiActions'
 import 'babel-polyfill'
 
 export async function createNewEpic(title) {
@@ -13,9 +10,11 @@ export async function createNewEpic(title) {
   return resp.data.createEpic.id
 }
 
-export async function listQuestions() {
-  const { data } = await API.graphql(graphqlOperation(ListQuestions))
-  return data.listQuestions.items
+export async function listEpicStories(epicID) {
+  const { data } = await API.graphql(
+    graphqlOperation(ListEpicStories, { epicID })
+  )
+  return data
 }
 
 const GqlRetry = async (query, variables) => {

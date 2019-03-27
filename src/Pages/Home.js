@@ -11,7 +11,7 @@ import {
 import { connect } from 'react-redux'
 import { Form } from 'semantic-ui-react'
 import { EpicCreationForm } from '../Components/EpicCreationFrom'
-import { createNewEpic } from '../Actions/CreateQuiz';
+import { createNewEpic } from '../Actions/CreateQuiz'
 
 import 'semantic-ui-css/semantic.min.css'
 import './Home.scss'
@@ -45,30 +45,37 @@ const mapDispatchToProps = dispatch => {
 
 class Home extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      epicName: 'Conor crazy epic'
+      epicName: 'Conor crazy epic',
     }
 
-    this.createEpic = this.createEpic.bind(this);
-    this.setEpicName = this.setEpicName.bind(this);
+    this.createEpic = this.createEpic.bind(this)
+    this.setEpicName = this.setEpicName.bind(this)
   }
 
-  createEpic() {
-    const { epicName } = this.state;
-    createNewEpic(epicName)
+  async createEpic() {
+    const { epicName } = this.state
+    const epicId = await createNewEpic(epicName)
+
+    console.log('EPIC ID', epicId)
+
+    this.props.history.push(`/estimation?id=${epicId}`)
   }
 
   setEpicName(event) {
-    console.log('Event', event);
+    console.log('Event', event)
   }
- 
+
   render() {
     return (
       <div className="Home-body">
         <Form>
-          <EpicCreationForm onCreate={this.createEpic} onInputChange={this.setEpicName}/>
+          <EpicCreationForm
+            onCreate={this.createEpic}
+            onInputChange={this.setEpicName}
+          />
         </Form>
       </div>
     )
@@ -79,4 +86,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(withAuthenticator(Home, { includeGreetings: false }))
-

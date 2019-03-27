@@ -63,17 +63,18 @@ query MyQuizzes {
     }
 }`
 
-export const ListQuizQuestions = `
-query MyQuestions ($quizID: ID!){
-    getQuiz(id: $quizID) {
-        questions (limit: 50) {
+export const ListEpicStories = `
+query MyStories ($epicID: ID!){
+    getEpic(id: $epicID) {
+        stories (limit: 20) {
             items {
                 id
                 tags
                 text
                 links
-                answers {
-                    items { id text correct }
+                description
+                estimates {
+                    items { id text }
                 }
             }
         }

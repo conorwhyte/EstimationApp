@@ -9,7 +9,7 @@ const estimationOptions = [
   },
 ]
 
-export const EpicCreationForm = (props) => {
+export const EpicCreationForm = props => {
   return (
     <div className="Home-body-section">
       <Header
@@ -23,7 +23,9 @@ export const EpicCreationForm = (props) => {
       <Select placeholder="Select your option" options={estimationOptions} />
 
       <br />
-      <Button primary onClick={props.onCreate}>Primary</Button>
+      <Button primary onClick={props.onCreate}>
+        Primary
+      </Button>
     </div>
   )
 }

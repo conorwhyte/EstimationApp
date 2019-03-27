@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, hashHistory } from 'react-router-dom'
-// import Estimation from './Pages/Estimation'
+import Estimation from './Pages/Estimation'
 import Home from './Pages/Home'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -16,7 +16,7 @@ ReactDOM.render(
     <BrowserRouter history={hashHistory}>
       <div>
         <Route exact path="/" component={Home} />
-        {/* <Route path="/quiz/" component={Estimation} /> */}
+        <Route path="/estimation/" component={Estimation} />
       </div>
     </BrowserRouter>
   </Provider>,
