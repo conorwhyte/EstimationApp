@@ -1,30 +1,18 @@
 import React from 'react'
-import { Input, Select, Header, Button } from 'semantic-ui-react'
-
-const estimationOptions = [
-  {
-    key: 'WAG',
-    text: 'WAG',
-    value: 'WAG',
-  },
-]
+import { Input, Button, PageHeader } from 'antd'
 
 export const EpicCreationForm = props => {
   return (
     <div className="Home-body-section">
-      <Header
-        as="h2"
-        content="Account Settings"
-        subheader="Manage your account settings and set email preferences"
+      <PageHeader
+        title="Account Settings"
+        subTitle="Manage your account settings and set email preferences"
       />
-      <br />
-      <Input />
-      <br />
-      <Select placeholder="Select your option" options={estimationOptions} />
+      <Input placeholder='Epic name' />
 
       <br />
       <Button primary onClick={props.onCreate}>
-        Primary
+        Create Epic
       </Button>
     </div>
   )

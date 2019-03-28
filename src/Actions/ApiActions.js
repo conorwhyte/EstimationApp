@@ -11,18 +11,18 @@ mutation (
   }
 }`
 
-export const QNewQuestion = `
+export const QNewStory = `
 mutation (
-  $text: String!,
-  $quizId: ID,
+  $title: String!,
+  $epicId: ID,
   ) {
-  createQuestion(input: {
-    text: $text,
-    quizQuestionsId: $quizId
+  createStory(input: {
+    title: $title,
+    epicStoriesId: $epicId
   })
   {
    id
-   text
+   title
    }
 }`
 
@@ -52,9 +52,9 @@ query ListQuestion {
     }
   }`
 
-export const ListQuizzes = `
-query MyQuizzes {
-    listQuizzes(limit: 25) {
+export const ListEpics = `
+query MyEpics {
+    listEpics(limit: 25) {
         nextToken
         items {
             id
@@ -63,6 +63,9 @@ query MyQuizzes {
     }
 }`
 
+// estimates {
+//   items { id title }
+// }
 export const ListEpicStories = `
 query MyStories ($epicID: ID!){
     getEpic(id: $epicID) {
@@ -70,12 +73,10 @@ query MyStories ($epicID: ID!){
             items {
                 id
                 tags
-                text
+                title
                 links
                 description
-                estimates {
-                    items { id text }
-                }
+                
             }
         }
     }

@@ -10,7 +10,8 @@ import { Form } from 'semantic-ui-react'
 import { EpicCreationForm } from '../Components/EpicCreationFrom'
 import { createNewEpic } from '../Actions/CreateQuiz'
 
-import 'semantic-ui-css/semantic.min.css'
+import 'antd/dist/antd.css';
+// import 'semantic-ui-css/semantic.min.css'
 import './Home.scss'
 import 'babel-polyfill'
 
@@ -56,12 +57,10 @@ class Home extends Component {
   render() {
     return (
       <div className="Home-body">
-        <Form>
           <EpicCreationForm
             onCreate={this.createEpic}
             onInputChange={this.setEpicName}
           />
-        </Form>
       </div>
     )
   }
