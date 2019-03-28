@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import Amplify from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
 import aws_exports from '../aws-exports' // specify the location of aws-exports.js file on your project
-import { addQuizScore } from '../Actions/question.action'
-import { connect } from 'react-redux'
 import { parse } from 'query-string'
 import { listEpicStories } from '../Actions/CreateQuiz';
 import { Button } from 'semantic-ui-react'
@@ -12,21 +10,6 @@ import './Estimation.scss'
 import 'semantic-ui-css/semantic.min.css'
 
 Amplify.configure(aws_exports)
-
-const mapStateToProps = state => {
-  return {
-    quizQuestions: state.quiz.quizQuestions,
-    quizId: state.quiz.quizId,
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addCompletedQuizScore: quizScore => {
-      dispatch(addQuizScore(quizScore))
-    },
-  }
-}
 
 class Estimation extends Component {
   constructor(props) {
@@ -55,7 +38,4 @@ class Estimation extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withAuthenticator(Estimation, { includeGreetings: false }))
+export default withAuthenticator(Estimation, { includeGreetings: false })

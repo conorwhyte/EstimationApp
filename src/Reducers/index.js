@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import quiz from './question.reducer'
+import epic from './epic.reducer'
 
 export default combineReducers({
-  quiz,
+  epic,
 })
