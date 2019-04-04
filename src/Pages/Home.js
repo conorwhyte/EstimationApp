@@ -8,7 +8,7 @@ import {
 import { connect } from 'react-redux'
 import { Form } from 'semantic-ui-react'
 import { EpicCreationForm } from '../Components/EpicCreationFrom'
-import { createNewEpic } from '../Actions/CreateQuiz'
+import { createNewEpic } from '../Actions/CreateQuiz.ts'
 
 import 'antd/dist/antd.css';
 // import 'semantic-ui-css/semantic.min.css'

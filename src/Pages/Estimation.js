@@ -1,15 +1,21 @@
 import React, { Component, useState } from 'react'
-import Amplify from 'aws-amplify'
+import Amplify,  { API, graphqlOperation, Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
 import aws_exports from '../aws-exports' // specify the location of aws-exports.js file on your project
 import { parse } from 'query-string'
-import { listEpicStories, createStory, listEpics } from '../Actions/CreateQuiz';
+import { listEpicStories, createStoryForQuiz, listEpics } from '../Actions/CreateQuiz.ts';
 import { Button, Input, PageHeader, Tag, Card, Col, Row, Avatar} from 'antd'
+import * as subscriptions from '../graphql/subscriptions';
 
 import './Estimation.scss'
-import 'semantic-ui-css/semantic.min.css'
 
 Amplify.configure(aws_exports)
+
+// const subscription = API.graphql(
+//   graphqlOperation(subscriptions.onCreateStory)
+// ).subscribe({
+//   next: (todoData) => console.log('CONRO SUB', todoData)
+// });
 
 class Estimation extends Component {
   constructor(props) {
@@ -24,6 +30,23 @@ class Estimation extends Component {
     this.createStory = this.createStory.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
   }
+  
+  componentDidMount() {
+    API.graphql(
+      graphqlOperation(subscriptions.onCreateStory)
+    ).subscribe({
+      next: (todoData) => console.log('CONRO SUB', todoData)
+    });
+    
+    this.getCurrentUser();
+  }
+
+  getCurrentUser() {
+    Auth.currentAuthenticatedUser()
+    .then(user => {
+      this.setState({user});
+    })
+  }
 
   async getEpicStories() {
     const { search } = this.props.location;
@@ -37,7 +60,7 @@ class Estimation extends Component {
     const { search } = this.props.location;
     const { id } = parse(search);
 
-    await createStory(id, storyTitle);
+    await createStoryForQuiz(id, storyTitle);
   }
 
   changeTitle(event) {
@@ -61,10 +84,10 @@ class Estimation extends Component {
           <Input size="large" placeholder="Epic title" onChange={this.changeTitle}/>
           <Input placeholder="Description" />
           
-          <Button primary onClick={this.createStory}>
+          <Button onClick={this.createStory}>
             Create Story
           </Button>
-          <Button primary onClick={this.getEpicStories}>
+          <Button onClick={this.getEpicStories}>
             Get Story
           </Button>
         </div>

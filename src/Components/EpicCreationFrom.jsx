@@ -11,7 +11,7 @@ export const EpicCreationForm = props => {
       <Input placeholder='Epic name' />
 
       <br />
-      <Button primary onClick={props.onCreate}>
+      <Button primary='true' onClick={props.onCreate}>
         Create Epic
       </Button>
     </div>
