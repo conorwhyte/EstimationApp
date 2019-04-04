@@ -23,11 +23,11 @@ export async function createStoryForQuiz(epicId, title) {
   // return resp.data;
 
   console.log({epicId, title});
-  const createStoryInput = {
-    epicId,
-    title,
+  const createStoryInput: CreateStoryInput = {
+    title: title,
+    epicStoriesId: epicId,
   };
-  const resp = await GqlRetry(QNewStory, createStoryInput);
+  const resp = await GqlRetry(createStory, {input: createStoryInput});
   
   // Create the story
   return resp.data;

@@ -5,11 +5,14 @@ export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
   createEpic(input: $input) {
     id
     title
+    tags
+    links
     total
     stories {
       items {
         id
         title
+        epicStoriesId
         description
         tags
         links
@@ -26,11 +29,14 @@ export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
   updateEpic(input: $input) {
     id
     title
+    tags
+    links
     total
     stories {
       items {
         id
         title
+        epicStoriesId
         description
         tags
         links
@@ -47,11 +53,14 @@ export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
   deleteEpic(input: $input) {
     id
     title
+    tags
+    links
     total
     stories {
       items {
         id
         title
+        epicStoriesId
         description
         tags
         links
@@ -68,6 +77,7 @@ export const createStory = `mutation CreateStory($input: CreateStoryInput!) {
   createStory(input: $input) {
     id
     title
+    epicStoriesId
     description
     tags
     links
@@ -89,6 +99,7 @@ export const updateStory = `mutation UpdateStory($input: UpdateStoryInput!) {
   updateStory(input: $input) {
     id
     title
+    epicStoriesId
     description
     tags
     links
@@ -110,6 +121,7 @@ export const deleteStory = `mutation DeleteStory($input: DeleteStoryInput!) {
   deleteStory(input: $input) {
     id
     title
+    epicStoriesId
     description
     tags
     links
@@ -135,6 +147,7 @@ export const createEstimate = `mutation CreateEstimate($input: CreateEstimateInp
     story {
       id
       title
+      epicStoriesId
       description
       tags
       links
@@ -156,6 +169,7 @@ export const updateEstimate = `mutation UpdateEstimate($input: UpdateEstimateInp
     story {
       id
       title
+      epicStoriesId
       description
       tags
       links
@@ -177,6 +191,7 @@ export const deleteEstimate = `mutation DeleteEstimate($input: DeleteEstimateInp
     story {
       id
       title
+      epicStoriesId
       description
       tags
       links

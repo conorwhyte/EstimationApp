@@ -10,6 +10,7 @@ type Epic @model(queries: {list: "listEpics", get: "getEpic"}) @versioned {
 type Story @model(queries: {list: "listStories", get: "getStory"}) @versioned {
   id: ID!
   title: String!
+  epicStoriesId: ID
   description: String
   tags: [String]
   links: [String]

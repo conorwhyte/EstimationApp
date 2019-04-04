@@ -11,11 +11,9 @@ import './Estimation.scss'
 
 Amplify.configure(aws_exports)
 
-// const subscription = API.graphql(
-//   graphqlOperation(subscriptions.onCreateStory)
-// ).subscribe({
-//   next: (todoData) => console.log('CONRO SUB', todoData)
-// });
+const subscription = API.graphql(
+  graphqlOperation(subscriptions.onCreateStory)
+);
 
 class Estimation extends Component {
   constructor(props) {
@@ -32,13 +30,15 @@ class Estimation extends Component {
   }
   
   componentDidMount() {
-    API.graphql(
-      graphqlOperation(subscriptions.onCreateStory)
-    ).subscribe({
+    subscription.subscribe({
       next: (todoData) => console.log('CONRO SUB', todoData)
     });
     
-    this.getCurrentUser();
+    // this.getCurrentUser();
+  }
+
+  componentWillUnmount() {
+    subscription.unsubscribe();
   }
 
   getCurrentUser() {

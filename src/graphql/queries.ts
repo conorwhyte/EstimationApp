@@ -5,11 +5,14 @@ export const getEpic = `query GetEpic($id: ID!) {
   getEpic(id: $id) {
     id
     title
+    tags
+    links
     total
     stories {
       items {
         id
         title
+        epicStoriesId
         description
         tags
         links
@@ -31,6 +34,8 @@ export const listEpics = `query ListEpics(
     items {
       id
       title
+      tags
+      links
       total
       stories {
         nextToken
@@ -45,6 +50,7 @@ export const getStory = `query GetStory($id: ID!) {
   getStory(id: $id) {
     id
     title
+    epicStoriesId
     description
     tags
     links
@@ -71,6 +77,7 @@ export const listStories = `query ListStories(
     items {
       id
       title
+      epicStoriesId
       description
       tags
       links
@@ -92,6 +99,7 @@ export const getEstimate = `query GetEstimate($id: ID!) {
     story {
       id
       title
+      epicStoriesId
       description
       tags
       links
@@ -118,6 +126,7 @@ export const listEstimates = `query ListEstimates(
       story {
         id
         title
+        epicStoriesId
         description
         tags
         links

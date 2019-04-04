@@ -1,6 +1,8 @@
 type Epic {
   id: ID!
   title: String!
+  tags: [String]
+  links: [String]
   total: Float
   stories(filter: ModelStoryFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelStoryConnection
   version: Int!
@@ -9,6 +11,7 @@ type Epic {
 type Story {
   id: ID!
   title: String!
+  epicStoriesId: ID
   description: String
   tags: [String]
   links: [String]
@@ -93,6 +96,8 @@ input ModelBooleanFilterInput {
 input ModelEpicFilterInput {
   id: ModelIDFilterInput
   title: ModelStringFilterInput
+  tags: ModelStringFilterInput
+  links: ModelStringFilterInput
   total: ModelFloatFilterInput
   and: [ModelEpicFilterInput]
   or: [ModelEpicFilterInput]
@@ -111,12 +116,16 @@ type Query {
 input CreateEpicInput {
   id: ID
   title: String!
+  tags: [String]
+  links: [String]
   total: Float
 }
 
 input UpdateEpicInput {
   id: ID!
   title: String
+  tags: [String]
+  links: [String]
   total: Float
   expectedVersion: Int!
 }
@@ -158,6 +167,7 @@ type ModelStoryConnection {
 input ModelStoryFilterInput {
   id: ModelIDFilterInput
   title: ModelStringFilterInput
+  epicStoriesId: ModelIDFilterInput
   description: ModelStringFilterInput
   tags: ModelStringFilterInput
   links: ModelStringFilterInput
@@ -170,21 +180,21 @@ input ModelStoryFilterInput {
 input CreateStoryInput {
   id: ID
   title: String!
+  epicStoriesId: ID
   description: String
   tags: [String]
   links: [String]
   avgEstimate: Float
-  epicStoriesId: ID
 }
 
 input UpdateStoryInput {
   id: ID!
   title: String
+  epicStoriesId: ID
   description: String
   tags: [String]
   links: [String]
   avgEstimate: Float
-  epicStoriesId: ID
   expectedVersion: Int!
 }
 
