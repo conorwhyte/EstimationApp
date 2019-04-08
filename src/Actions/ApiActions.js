@@ -81,3 +81,13 @@ query MyStories ($epicID: ID!){
         }
     }
 }`
+
+export const onCreate = `subscription OnCreateStory($epicStoriesId: ID) {
+  onCreateStory(epicStoriesId: $epicStoriesId) {
+    id
+    title
+    epicStoriesId
+    description
+  }
+}
+`;

@@ -1,11 +1,13 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import Amplify,  { API, graphqlOperation, Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
 import aws_exports from '../aws-exports' // specify the location of aws-exports.js file on your project
 import { parse } from 'query-string'
 import { listEpicStories, createStoryForQuiz, listEpics } from '../Actions/CreateQuiz.ts';
-import { Button, Input, PageHeader, Tag, Card, Col, Row, Avatar} from 'antd'
+import { Button, PageHeader, Tag, Avatar} from 'antd'
 import * as subscriptions from '../graphql/subscriptions';
+import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
+import { onCreate } from '../Actions/ApiActions';
 
 import './Estimation.scss'
 
@@ -22,16 +24,24 @@ class Estimation extends Component {
     this.state = {
       ...props.location.state,
       storyTitle: '',
+      showCreateStoryModal: false,
     };
 
     this.getEpicStories = this.getEpicStories.bind(this);
     this.createStory = this.createStory.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
+    this.showCreateModal = this.showCreateModal.bind(this);
   }
   
   componentDidMount() {
+    const { search } = this.props.location;
+    const { id } = parse(search);
     subscription.subscribe({
-      next: (todoData) => console.log('CONRO SUB', todoData)
+      next: (data) => {
+        if ( data.value.data.onCreateStory.epicStoriesId === id) {
+          console.log('CONRsO');
+        }
+      }
     });
     
     // this.getCurrentUser();
@@ -55,12 +65,11 @@ class Estimation extends Component {
     await listEpicStories(id)
   }
 
-  async createStory() {
-    const { storyTitle } = this.state;
+  async createStory(input) {
     const { search } = this.props.location;
     const { id } = parse(search);
 
-    await createStoryForQuiz(id, storyTitle);
+    await createStoryForQuiz(id, input);
   }
 
   changeTitle(event) {
@@ -68,8 +77,21 @@ class Estimation extends Component {
       storyTitle: event.target.value,
     });
   }
+
+  showCreateModal(flag) {
+    this.setState({
+      showCreateStoryModal: flag,
+    });
+  }
  
   render() {
+    const addStoryModalProps = {
+      loading: false,
+      createStory: this.createStory,
+      showCreateModal: this.showCreateModal,
+    };
+    const { showCreateStoryModal } = this.state;
+
     return (
       <div className='Estimation-body'>
        <PageHeader
@@ -79,51 +101,23 @@ class Estimation extends Component {
           
         <h1> Story Title </h1>
         <h3> Give a short description here for the story. </h3>
+        
+        <Button onClick={() => {this.showCreateModal(true)}}>
+          Create Story
+        </Button>
 
-        <div className='Estimation-input'>
-          <Input size="large" placeholder="Epic title" onChange={this.changeTitle}/>
-          <Input placeholder="Description" />
-          
-          <Button onClick={this.createStory}>
-            Create Story
-          </Button>
-          <Button onClick={this.getEpicStories}>
-            Get Story
-          </Button>
-        </div>
+        <AddStoryModal {...addStoryModalProps} visible={showCreateStoryModal} />
 
-        <div className='Estimation-cards'>
-          <Row gutter={16}>
-            <Col span={5}>
-              <Card onClick={() =>{console.log('CONOR')}} title="WAG" hoverable style={{ width: 200, textAlign: 'center' }}>
-                <h2> 0.5 </h2>
-              </Card>
-            </Col>
-            <Col span={5}>
-              <Card title="WAG" hoverable style={{ border: '2px solid #ff0000', width: 200, textAlign: 'center' }}>
-                <h2> 0.25 </h2>
-              </Card>
-            </Col>
-            <Col span={5}>
-              <Card title="WAG" hoverable style={{ width: 200, textAlign: 'center' }}>
-                <h2> 0.1 </h2>
-              </Card>
-            </Col>
-            <Col span={5}>
-              <Card title="WAG" hoverable style={{ width: 200, textAlign: 'center' }}>
-                <Input />
-              </Card>
-            </Col>
-          </Row>
-        </div>
+        <AddEstimation />
+        <br />
+        <Button onClick={() => {this.showCreateModal(true)}}>
+          Set Estimation
+        </Button>
 
         <br />
-        <div className='Estimation-avatar'>
-          <Avatar style={{ backgroundColor: '#6ab5f2', verticalAlign: 'middle' }} size="large">
-            {'CW'}
-          </Avatar>
-          <h2> 0.25 </h2>
-        </div>
+        <br />
+
+        <UserAvatar />
         
       </div>
     );
