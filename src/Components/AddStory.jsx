@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Button, Input } from 'antd'
+import { Modal, Input } from 'antd'
 
 // interface AddStoryProps {
 //     visible?: boolean;
@@ -11,7 +11,7 @@ export const AddStoryModal = (props) => {
   const [ storyTitle, setStoryTitle ] = useState('');
 
   const changeTitle = (event) => {
-    setStoryTitle(event);
+    setStoryTitle(event.target.value);
   };
 
   const createStory = () => {

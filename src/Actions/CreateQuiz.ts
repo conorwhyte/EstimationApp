@@ -1,11 +1,8 @@
 import retry from 'async-retry'
 import { API, graphqlOperation } from 'aws-amplify'
 import { QNewEpic, ListEpicStories, QNewStory, ListEpics } from './ApiActions'
-
 import { createStory } from '../graphql/mutations'
-
 import { CreateStoryInput } from '../API';
-
 import 'babel-polyfill'
 
 export async function createNewEpic(title) {
