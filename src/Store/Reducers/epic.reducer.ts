@@ -1,6 +1,6 @@
 import {
   ADD_EPIC_ID,
-} from '../Actions/epic.action'
+} from '../../Actions/epic.action'
 
 interface AppState {
   quizId: string;

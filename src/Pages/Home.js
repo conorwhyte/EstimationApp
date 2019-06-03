@@ -43,11 +43,12 @@ class Home extends Component {
 
   async createEpic() {
     const { epicName } = this.state
-    const epicId = await createNewEpic(epicName)
+    const { addCurrentEpicId } = this.props
+    // const epicId = await createNewEpic(epicName)
 
-    console.log('EPIC ID', epicId)
+    addCurrentEpicId('test')
 
-    this.props.history.push(`/estimation?id=${epicId}`)
+    // this.props.history.push(`/estimation?id=${epicId}`)
   }
 
   setEpicName(event) {
