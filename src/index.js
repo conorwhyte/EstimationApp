@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Route, hashHistory } from 'react-router-dom'
+import { BrowserRouter as Router, Route, hashHistory } from 'react-router-dom'
 import Estimation from './Pages/Estimation'
 import Home from './Pages/Home'
 import { createStore, applyMiddleware } from 'redux'
@@ -18,12 +18,12 @@ const appElement = document.getElementById('App')
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter history={hashHistory}>
+    <Router history={hashHistory}>
       <div>
         <Route exact path="/" component={Home} />
         <Route path="/estimation/" component={Estimation} />
       </div>
-    </BrowserRouter>
+    </Router>
   </Provider>,
   appElement
 )

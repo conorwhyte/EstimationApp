@@ -3,11 +3,11 @@ import {
 } from '../../Actions/epic.action'
 
 interface AppState {
-  quizId: string;
+  epicId: string;
 }
 
 const initialState: AppState = {
-  quizId: '',
+  epicId: '',
 }
 
 const epic = (state = initialState, action) => {
@@ -15,7 +15,7 @@ const epic = (state = initialState, action) => {
     case ADD_EPIC_ID:
       return {
         ...state,
-        quizId: action.quizId,
+        epicId: action.epicId,
       }
     default:
       return state

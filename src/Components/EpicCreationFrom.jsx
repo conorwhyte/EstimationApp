@@ -8,7 +8,7 @@ export const EpicCreationForm = props => {
         title="Account Settings"
         subTitle="Manage your account settings and set email preferences"
       />
-      <Input placeholder='Epic name' />
+      <Input onInput={props.onInputChange} placeholder='Epic name' />
 
       <br />
       <Button primary='true' onClick={props.onCreate}>
