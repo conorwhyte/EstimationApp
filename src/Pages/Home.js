@@ -4,6 +4,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../aws-exports'; // specify the location of aws-exports.js file on your project
 import { createEpic } from '../Actions/epic.action';
 import { connect } from 'react-redux';
+import { listEpicsForUser } from '../Actions/CreateQuiz';
 import { EpicCreationForm } from '../Components/EpicCreationFrom';
 import { getEpicId } from '../Store/Selectors/epic.selector';
 
@@ -43,6 +44,12 @@ class Home extends Component {
     if (epicId.length > 0) {
       history.push(`/estimation?id=${epicId}`);
     }
+  }
+
+  async componentDidMount() {
+    const listEpics = await listEpicsForUser();
+
+    console.log('listEpics', listEpics);
   }
 
   async createEpic() {

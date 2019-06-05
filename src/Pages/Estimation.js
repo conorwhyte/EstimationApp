@@ -7,6 +7,7 @@ import {
   listEpicStories,
   createStoryForQuiz,
   listEpics,
+  getEpicForId,
 } from '../Actions/CreateQuiz.ts';
 import { Button, PageHeader, Tag, Avatar } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
@@ -41,7 +42,7 @@ class Estimation extends Component {
     subscription.subscribe({
       next: data => {
         if (data.value.data.onCreateStory.epicStoriesId === id) {
-          console.log('CONRsO');
+          console.log('Subscription succeeded');
         }
       },
     });
@@ -62,8 +63,12 @@ class Estimation extends Component {
   async getEpicStories() {
     const { search } = this.props.location;
     const { id } = parse(search);
+    // const result =  await listEpicStories(id);
 
-    await listEpicStories(id);
+    const result = await getEpicForId(id);
+    console.log('result: ', result);
+
+    // await listEpicStories(id);
   }
 
   async createStory(input) {
@@ -123,7 +128,11 @@ class Estimation extends Component {
         >
           Set Estimation
         </Button>
-
+        
+        <Button onClick={this.getEpicStories}>
+          Get stories for epic
+        </Button>
+        
         <br />
         <br />
 

@@ -16,7 +16,7 @@ const api = {
   },
 };
 
-export const createEpic = (action$, state$) =>
+export const createEpic = (action$) =>
   action$.pipe(
     ofType(CREATE_EPIC),
     mergeMap(action =>
