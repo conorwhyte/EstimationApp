@@ -9,7 +9,7 @@ mutation (
    id
    title
   }
-}`
+}`;
 
 export const QNewStory = `
 mutation (
@@ -24,7 +24,7 @@ mutation (
    id
    title
    }
-}`
+}`;
 
 export const QNewAnswer = `
 mutation (
@@ -40,7 +40,7 @@ mutation (
   {
    id
    }
-}`
+}`;
 
 export const ListQuestions = `
 query ListQuestion {
@@ -50,7 +50,7 @@ query ListQuestion {
         text
       }
     }
-  }`
+  }`;
 
 export const ListEpics = `
 query MyEpics {
@@ -61,7 +61,7 @@ query MyEpics {
             title
         }
     }
-}`
+}`;
 
 // estimates {
 //   items { id title }
@@ -80,7 +80,7 @@ query MyStories ($epicID: ID!){
             }
         }
     }
-}`
+}`;
 
 export const onCreate = `subscription OnCreateStory($epicStoriesId: ID) {
   onCreateStory(epicStoriesId: $epicStoriesId) {

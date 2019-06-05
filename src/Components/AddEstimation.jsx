@@ -1,14 +1,14 @@
-import React from 'react'
-import { Row, Col, Input, Card } from 'antd'
+import React from 'react';
+import { Row, Col, Input, Card } from 'antd';
 
 const cardStyle = {
-  width: 200, 
+  width: 200,
   textAlign: 'center',
 };
 
 export const AddEstimation = props => {
   return (
-    <div className='Estimation-cards'>
+    <div className="Estimation-cards">
       <Row gutter={16}>
         <Col span={5}>
           <Card title="WAG" hoverable style={cardStyle}>
@@ -32,5 +32,5 @@ export const AddEstimation = props => {
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};

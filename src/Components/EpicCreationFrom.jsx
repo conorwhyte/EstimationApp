@@ -1,5 +1,5 @@
-import React from 'react'
-import { Input, Button, PageHeader } from 'antd'
+import React from 'react';
+import { Input, Button, PageHeader } from 'antd';
 
 export const EpicCreationForm = props => {
   return (
@@ -8,12 +8,12 @@ export const EpicCreationForm = props => {
         title="Account Settings"
         subTitle="Manage your account settings and set email preferences"
       />
-      <Input onInput={props.onInputChange} placeholder='Epic name' />
+      <Input onInput={props.onInputChange} placeholder="Epic name" />
 
       <br />
-      <Button primary='true' onClick={props.onCreate}>
+      <Button primary="true" onClick={props.onCreate}>
         Create Epic
       </Button>
     </div>
-  )
-}
+  );
+};

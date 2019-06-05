@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Modal, Input } from 'antd'
+import React, { useState } from 'react';
+import { Modal, Input } from 'antd';
 
 // interface AddStoryProps {
 //     visible?: boolean;
@@ -7,10 +7,10 @@ import { Modal, Input } from 'antd'
 //     createStory: (storyTitle: string) => void;
 // }
 
-export const AddStoryModal = (props) => {
-  const [ storyTitle, setStoryTitle ] = useState('');
+export const AddStoryModal = props => {
+  const [storyTitle, setStoryTitle] = useState('');
 
-  const changeTitle = (event) => {
+  const changeTitle = event => {
     setStoryTitle(event.target.value);
   };
 
@@ -24,16 +24,16 @@ export const AddStoryModal = (props) => {
 
   return (
     <Modal
-        visible={props.visible}
-        title="Add Story"
-        onOk={createStory}
-        onCancel={setModalVisibilty}
+      visible={props.visible}
+      title="Add Story"
+      onOk={createStory}
+      onCancel={setModalVisibilty}
     >
-        <div className='Estimation-input'>
-          <p> Add a story for the epic. </p>
-          <Input size="large" placeholder="Epic title" onChange={changeTitle}/>
-          <Input placeholder="Description" />
-        </div>
+      <div className="Estimation-input">
+        <p> Add a story for the epic. </p>
+        <Input size="large" placeholder="Epic title" onChange={changeTitle} />
+        <Input placeholder="Description" />
+      </div>
     </Modal>
-  )
-}
+  );
+};
