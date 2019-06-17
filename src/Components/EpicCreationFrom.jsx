@@ -1,19 +1,24 @@
 import React from 'react';
 import { Input, Button, PageHeader } from 'antd';
 
-export const EpicCreationForm = props => {
-  return (
-    <div className="Home-body-section">
+const divder = <div style={{ margin: '15px 0' }} />;
+
+export const EpicCreationForm = props => 
+    <div className="Home-body-section" style={{textAlign: "center"}}>
       <PageHeader
-        title="Account Settings"
-        subTitle="Manage your account settings and set email preferences"
+        title="Create epic"
+        subTitle="Create an epic to be estimated"
       />
       <Input onInput={props.onInputChange} placeholder="Epic name" />
+      
+      {divder}
+      <Input.TextArea
+        placeholder="Epic description"
+        autosize={{ minRows: 2, maxRows: 6 }}
+      />
 
-      <br />
-      <Button primary="true" onClick={props.onCreate}>
+      {divder}
+      <Button primary="true" type="primary" onClick={props.onCreate}>
         Create Epic
       </Button>
-    </div>
-  );
-};
+    </div>;

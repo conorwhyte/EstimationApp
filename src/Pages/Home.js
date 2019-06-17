@@ -6,6 +6,7 @@ import { createEpic } from '../Actions/epic.action';
 import { connect } from 'react-redux';
 import { listEpicsForUser } from '../Actions/CreateQuiz';
 import { EpicCreationForm } from '../Components/EpicCreationFrom';
+import { EpicTable } from '../Components/EpicTable';
 import { getEpicId } from '../Store/Selectors/epic.selector';
 
 import 'antd/dist/antd.css';
@@ -32,6 +33,7 @@ class Home extends Component {
 
     this.state = {
       epicName: '',
+      listOfEpics: [],
     };
 
     this.createEpic = this.createEpic.bind(this);
@@ -49,7 +51,9 @@ class Home extends Component {
   async componentDidMount() {
     const listEpics = await listEpicsForUser();
 
-    console.log('listEpics', listEpics);
+    this.setState({
+      listOfEpics: listEpics.data.listEpics.items
+    })
   }
 
   async createEpic() {
@@ -66,12 +70,15 @@ class Home extends Component {
   }
 
   render() {
+    const { listOfEpics } = this.state;
     return (
       <div className="Home-body">
         <EpicCreationForm
           onCreate={this.createEpic}
           onInputChange={this.setEpicName}
         />
+        <br />
+        <EpicTable listOfEpics={listOfEpics}/>
       </div>
     );
   }

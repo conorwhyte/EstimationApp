@@ -4,16 +4,12 @@ import { withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../aws-exports'; // specify the location of aws-exports.js file on your project
 import { parse } from 'query-string';
 import {
-  listEpicStories,
   createStoryForQuiz,
-  listEpics,
   getEpicForId,
 } from '../Actions/CreateQuiz.ts';
-import { Button, PageHeader, Tag, Avatar } from 'antd';
+import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
 import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
-import { onCreate } from '../Actions/ApiActions';
-
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
@@ -28,6 +24,7 @@ class Estimation extends Component {
       ...props.location.state,
       storyTitle: '',
       showCreateStoryModal: false,
+      currentEpic: {},
     };
 
     this.getEpicStories = this.getEpicStories.bind(this);
@@ -36,9 +33,15 @@ class Estimation extends Component {
     this.showCreateModal = this.showCreateModal.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { search } = this.props.location;
     const { id } = parse(search);
+    const result = await getEpicForId(id);
+    const currentEpic = {
+      id: id,
+      title: result.data.getEpic.title,
+    }
+    
     subscription.subscribe({
       next: data => {
         if (data.value.data.onCreateStory.epicStoriesId === id) {
@@ -47,7 +50,9 @@ class Estimation extends Component {
       },
     });
 
-    // this.getCurrentUser();
+    this.setState({
+      currentEpic: currentEpic,
+    });
   }
 
   componentWillUnmount() {
@@ -61,13 +66,6 @@ class Estimation extends Component {
   }
 
   async getEpicStories() {
-    const { search } = this.props.location;
-    const { id } = parse(search);
-    // const result =  await listEpicStories(id);
-
-    const result = await getEpicForId(id);
-    console.log('result: ', result);
-
     // await listEpicStories(id);
   }
 
@@ -96,48 +94,59 @@ class Estimation extends Component {
       createStory: this.createStory,
       showCreateModal: this.showCreateModal,
     };
-    const { showCreateStoryModal } = this.state;
+    const { showCreateStoryModal, currentEpic } = this.state;
+    const { Content, Sider } = Layout;
+
+    const content = (
+      <Content>
+        <div className="Estimation-body">
+          <PageHeader
+            title={currentEpic.title}
+            subTitle="This is a subtitle"
+            // tags={<Tag color="red">Warning</Tag>}
+          />
+
+          <h1> Story Title </h1>
+          <h3> Give a short description here for the story. </h3>
+
+          <Button
+            onClick={() => {
+              this.showCreateModal(true);
+            }}
+          >
+            Create Story
+          </Button>
+
+          <AddStoryModal {...addStoryModalProps} visible={showCreateStoryModal} />
+
+          <AddEstimation />
+          <br />
+          <Button
+            onClick={() => {
+              this.showCreateModal(true);
+            }}
+          >
+            Set Estimation
+          </Button>
+          
+          <Button onClick={this.getEpicStories}>
+            Get stories for epic
+          </Button>
+          
+          <br />
+          <br />
+
+          <UserAvatar />
+        </div>
+    </Content>);
 
     return (
-      <div className="Estimation-body">
-        <PageHeader
-          title="Epic Title"
-          subTitle="This is a subtitle"
-          tags={<Tag color="red">Warning</Tag>}
-        />
-
-        <h1> Story Title </h1>
-        <h3> Give a short description here for the story. </h3>
-
-        <Button
-          onClick={() => {
-            this.showCreateModal(true);
-          }}
-        >
-          Create Story
-        </Button>
-
-        <AddStoryModal {...addStoryModalProps} visible={showCreateStoryModal} />
-
-        <AddEstimation />
-        <br />
-        <Button
-          onClick={() => {
-            this.showCreateModal(true);
-          }}
-        >
-          Set Estimation
-        </Button>
-        
-        <Button onClick={this.getEpicStories}>
-          Get stories for epic
-        </Button>
-        
-        <br />
-        <br />
-
-        <UserAvatar />
-      </div>
+      <Layout style={{ padding: '24px 0', background: '#fff' }}>
+        {content}
+        <Sider width={200} reverseArrow={true} theme={'light'} style={{ background: '#fff' }} collapsible={true} collapsedWidth={20}>
+          <h3>Stories</h3>
+        </Sider>
+      </Layout>
     );
   }
 }
