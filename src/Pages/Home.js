@@ -5,6 +5,7 @@ import aws_exports from '../aws-exports'; // specify the location of aws-exports
 import { createEpic } from '../Actions/epic.action';
 import { connect } from 'react-redux';
 import { listEpicsForUser } from '../Actions/CreateQuiz';
+import { addEpicId } from '../Actions/epic.action';
 import { EpicCreationForm } from '../Components/EpicCreationFrom';
 import { EpicTable } from '../Components/EpicTable';
 import { getEpicId } from '../Store/Selectors/epic.selector';
@@ -24,6 +25,9 @@ const mapDispatchToProps = dispatch => {
     createCurrentEpic: epicName => {
       dispatch(createEpic(epicName));
     },
+    addCurrentEpicId: id => {
+      dispatch(addEpicId(id))
+    }
   };
 };
 
@@ -38,6 +42,7 @@ class Home extends Component {
 
     this.createEpic = this.createEpic.bind(this);
     this.setEpicName = this.setEpicName.bind(this);
+    this.viewCurrentEpic = this.viewCurrentEpic.bind(this);
   }
 
   componentDidUpdate() {
@@ -69,6 +74,11 @@ class Home extends Component {
     });
   }
 
+  viewCurrentEpic(epic) {
+    const { addCurrentEpicId } = this.props;
+    addCurrentEpicId(epic.key);
+  }
+
   render() {
     const { listOfEpics } = this.state;
     return (
@@ -78,7 +88,7 @@ class Home extends Component {
           onInputChange={this.setEpicName}
         />
         <br />
-        <EpicTable listOfEpics={listOfEpics}/>
+        <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic}/>
       </div>
     );
   }

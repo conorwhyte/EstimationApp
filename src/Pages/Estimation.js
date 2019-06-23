@@ -6,6 +6,7 @@ import { parse } from 'query-string';
 import {
   createStoryForQuiz,
   getEpicForId,
+  listEpicStories,
 } from '../Actions/CreateQuiz.ts';
 import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
@@ -25,6 +26,7 @@ class Estimation extends Component {
       storyTitle: '',
       showCreateStoryModal: false,
       currentEpic: {},
+      stories: [],
     };
 
     this.getEpicStories = this.getEpicStories.bind(this);
@@ -36,9 +38,12 @@ class Estimation extends Component {
   async componentDidMount() {
     const { search } = this.props.location;
     const { id } = parse(search);
+    
     const result = await getEpicForId(id);
+    const storiesData = await this.getEpicStories();
+    
     const currentEpic = {
-      id: id,
+      id,
       title: result.data.getEpic.title,
     }
     
@@ -51,7 +56,8 @@ class Estimation extends Component {
     });
 
     this.setState({
-      currentEpic: currentEpic,
+      currentEpic,
+      stories: storiesData.data.getEpic.stories.items,
     });
   }
 
@@ -66,7 +72,10 @@ class Estimation extends Component {
   }
 
   async getEpicStories() {
-    // await listEpicStories(id);
+    const { search } = this.props.location;
+    const { id } = parse(search);
+    
+    return await listEpicStories(id);
   }
 
   async createStory(input) {
@@ -94,7 +103,7 @@ class Estimation extends Component {
       createStory: this.createStory,
       showCreateModal: this.showCreateModal,
     };
-    const { showCreateStoryModal, currentEpic } = this.state;
+    const { showCreateStoryModal, currentEpic, stories } = this.state;
     const { Content, Sider } = Layout;
 
     const content = (
@@ -138,13 +147,17 @@ class Estimation extends Component {
 
           <UserAvatar />
         </div>
-    </Content>);
+      </Content>
+    );
+
+    const storiesData = stories.map(item => <span key={`${item.id}`}>{item.title}</span>)
 
     return (
       <Layout style={{ padding: '24px 0', background: '#fff' }}>
         {content}
         <Sider width={200} reverseArrow={true} theme={'light'} style={{ background: '#fff' }} collapsible={true} collapsedWidth={20}>
           <h3>Stories</h3>
+          {storiesData}
         </Sider>
       </Layout>
     );
