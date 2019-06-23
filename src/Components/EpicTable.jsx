@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Divider } from 'antd';
 
-const generateColumns = (onClickCallback) => {
+const generateColumns = (viewEpic, deleteEpic) => {
     return [
         {
             title: 'Name',
@@ -18,9 +18,9 @@ const generateColumns = (onClickCallback) => {
             key: 'action',
             render: (key) => (
             <span>
-                <a onClick={() => onClickCallback(key)}>View</a>
+                <a onClick={() => viewEpic(key)}>View</a>
                 <Divider type="vertical" />
-                <a>Delete</a>
+                <a onClick={() => deleteEpic(key)}>Delete</a>
             </span>
             ),
         },
@@ -37,5 +37,5 @@ const populateData = (listOfEpics) =>
 
 export const EpicTable = props => 
     <div className="Home-body-section" style={{marginTop: '20px'}}>
-        <Table dataSource={populateData(props.listOfEpics)} columns={generateColumns(props.viewEpic)} />
+        <Table dataSource={populateData(props.listOfEpics)} columns={generateColumns(props.viewEpic, props.deleteEpic)} />
     </div>;

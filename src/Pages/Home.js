@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { notification } from 'antd';
 import Amplify from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../aws-exports'; // specify the location of aws-exports.js file on your project
 import { createEpic } from '../Actions/epic.action';
 import { connect } from 'react-redux';
-import { listEpicsForUser } from '../Actions/CreateQuiz';
+import { listEpicsForUser, deleteEpicForUser } from '../Actions/CreateQuiz';
 import { addEpicId } from '../Actions/epic.action';
 import { EpicCreationForm } from '../Components/EpicCreationFrom';
 import { EpicTable } from '../Components/EpicTable';
@@ -31,6 +32,14 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const openNotificationWithIcon = epicName => {
+  notification['success']({
+    message: 'Successfully deleted epic',
+    description:
+      `Sucessfully deleted epic ${epicName}`,
+  });
+};
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -40,9 +49,11 @@ class Home extends Component {
       listOfEpics: [],
     };
 
+    this.listEpics = this.listEpics.bind(this);
     this.createEpic = this.createEpic.bind(this);
     this.setEpicName = this.setEpicName.bind(this);
     this.viewCurrentEpic = this.viewCurrentEpic.bind(this);
+    this.deleteCurrentEpic = this.deleteCurrentEpic.bind(this);
   }
 
   componentDidUpdate() {
@@ -53,7 +64,11 @@ class Home extends Component {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.listEpics();
+  }
+
+  async listEpics() {
     const listEpics = await listEpicsForUser();
 
     this.setState({
@@ -79,6 +94,15 @@ class Home extends Component {
     addCurrentEpicId(epic.key);
   }
 
+  async deleteCurrentEpic(epic) {
+    const { key, name } = epic;
+    
+    await deleteEpicForUser(key);
+    openNotificationWithIcon(name);
+    
+    this.listEpics();
+  }
+
   render() {
     const { listOfEpics } = this.state;
     return (
@@ -88,7 +112,7 @@ class Home extends Component {
           onInputChange={this.setEpicName}
         />
         <br />
-        <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic}/>
+        <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic} deleteEpic={this.deleteCurrentEpic}/>
       </div>
     );
   }
