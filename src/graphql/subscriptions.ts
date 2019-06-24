@@ -5,6 +5,7 @@ export const onCreateEpic = `subscription OnCreateEpic {
   onCreateEpic {
     id
     title
+    description
     tags
     links
     total
@@ -29,6 +30,7 @@ export const onUpdateEpic = `subscription OnUpdateEpic {
   onUpdateEpic {
     id
     title
+    description
     tags
     links
     total
@@ -53,6 +55,7 @@ export const onDeleteEpic = `subscription OnDeleteEpic {
   onDeleteEpic {
     id
     title
+    description
     tags
     links
     total

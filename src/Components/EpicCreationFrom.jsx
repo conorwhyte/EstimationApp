@@ -14,6 +14,7 @@ export const EpicCreationForm = props =>
       {divder}
       <Input.TextArea
         placeholder="Epic description"
+        onInput={props.onDescriptionChange}
         autosize={{ minRows: 2, maxRows: 6 }}
       />
 

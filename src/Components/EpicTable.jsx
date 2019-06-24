@@ -32,6 +32,7 @@ const populateData = (listOfEpics) =>
         return {
             key: item.id,
             name: item.title,
+            description: item.description,
         }
     })
 

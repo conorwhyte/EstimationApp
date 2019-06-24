@@ -23,8 +23,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    createCurrentEpic: epicName => {
-      dispatch(createEpic(epicName));
+    createCurrentEpic: (epicName, epicDescription) => {
+      dispatch(createEpic(epicName, epicDescription));
     },
     addCurrentEpicId: id => {
       dispatch(addEpicId(id))
@@ -32,7 +32,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const openNotificationWithIcon = epicName => {
+const openSuccessNotification = epicName => {
   notification['success']({
     message: 'Successfully deleted epic',
     description:
@@ -47,6 +47,7 @@ class Home extends Component {
     this.state = {
       epicName: '',
       listOfEpics: [],
+      epicDescription: '',
     };
 
     this.listEpics = this.listEpics.bind(this);
@@ -54,6 +55,7 @@ class Home extends Component {
     this.setEpicName = this.setEpicName.bind(this);
     this.viewCurrentEpic = this.viewCurrentEpic.bind(this);
     this.deleteCurrentEpic = this.deleteCurrentEpic.bind(this);
+    this.setEpicDescription = this.setEpicDescription.bind(this);
   }
 
   componentDidUpdate() {
@@ -71,6 +73,8 @@ class Home extends Component {
   async listEpics() {
     const listEpics = await listEpicsForUser();
 
+    console.log('listEpics: ', listEpics);
+
     this.setState({
       listOfEpics: listEpics.data.listEpics.items
     })
@@ -78,14 +82,20 @@ class Home extends Component {
 
   async createEpic() {
     const { createCurrentEpic } = this.props;
-    const { epicName } = this.state;
+    const { epicName, epicDescription } = this.state;
 
-    createCurrentEpic(epicName);
+    createCurrentEpic(epicName, epicDescription);
   }
 
   setEpicName(event) {
     this.setState({
       epicName: event.target.value,
+    });
+  }
+
+  setEpicDescription(event) {
+    this.setState({
+      epicDescription: event.target.value,
     });
   }
 
@@ -98,7 +108,7 @@ class Home extends Component {
     const { key, name } = epic;
     
     await deleteEpicForUser(key);
-    openNotificationWithIcon(name);
+    openSuccessNotification(name);
     
     this.listEpics();
   }
@@ -110,6 +120,7 @@ class Home extends Component {
         <EpicCreationForm
           onCreate={this.createEpic}
           onInputChange={this.setEpicName}
+          onDescriptionChange={this.setEpicDescription}
         />
         <br />
         <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic} deleteEpic={this.deleteCurrentEpic}/>

@@ -1,6 +1,7 @@
 type Epic {
   id: ID!
   title: String!
+  description: String
   tags: [String]
   links: [String]
   total: Float
@@ -96,6 +97,7 @@ input ModelBooleanFilterInput {
 input ModelEpicFilterInput {
   id: ModelIDFilterInput
   title: ModelStringFilterInput
+  description: ModelStringFilterInput
   tags: ModelStringFilterInput
   links: ModelStringFilterInput
   total: ModelFloatFilterInput
@@ -116,6 +118,7 @@ type Query {
 input CreateEpicInput {
   id: ID
   title: String!
+  description: String
   tags: [String]
   links: [String]
   total: Float
@@ -124,6 +127,7 @@ input CreateEpicInput {
 input UpdateEpicInput {
   id: ID!
   title: String
+  description: String
   tags: [String]
   links: [String]
   total: Float

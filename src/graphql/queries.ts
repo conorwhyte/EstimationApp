@@ -5,6 +5,7 @@ export const getEpic = `query GetEpic($id: ID!) {
   getEpic(id: $id) {
     id
     title
+    description
     tags
     links
     total
@@ -34,6 +35,7 @@ export const listEpics = `query ListEpics(
     items {
       id
       title
+      description
       tags
       links
       total

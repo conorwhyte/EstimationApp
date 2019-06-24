@@ -5,6 +5,7 @@ export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
   createEpic(input: $input) {
     id
     title
+    description
     tags
     links
     total
@@ -29,6 +30,7 @@ export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
   updateEpic(input: $input) {
     id
     title
+    description
     tags
     links
     total
@@ -53,6 +55,7 @@ export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
   deleteEpic(input: $input) {
     id
     title
+    description
     tags
     links
     total
