@@ -4,7 +4,7 @@ import { CREATE_EPIC } from '../../Actions/epic.action';
 import { addEpicId } from '../../Actions/epic.action';
 import { from } from 'rxjs';
 import { API, graphqlOperation } from 'aws-amplify';
-import { createEpic as createEpicMutation } from '../../graphql/mutations'
+import { createEpic as createEpicMutation } from '../../graphql/mutations';
 
 const api = {
   putEpic: (query, variables) => {
@@ -13,19 +13,22 @@ const api = {
       title: variables.title,
       description: variables.description,
     };
-    const request = API.graphql(graphqlOperation(query, {input: createEpicInput})).catch(
-      err => err
-    );
+    const request = API.graphql(
+      graphqlOperation(query, { input: createEpicInput })
+    ).catch(err => err);
     return from(request);
   },
 };
 
-export const createEpic = (action$) =>
+export const createEpic = action$ =>
   action$.pipe(
     ofType(CREATE_EPIC),
     mergeMap(action =>
       api
-        .putEpic(createEpicMutation, { title: action.epicName, description: action.description })
+        .putEpic(createEpicMutation, {
+          title: action.epicName,
+          description: action.description,
+        })
         .pipe(map(response => addEpicId(response.data.createEpic.id)))
     )
   );

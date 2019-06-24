@@ -28,16 +28,15 @@ const mapDispatchToProps = dispatch => {
       dispatch(createEpic(epicName, epicDescription));
     },
     addCurrentEpicId: id => {
-      dispatch(addEpicId(id))
-    }
+      dispatch(addEpicId(id));
+    },
   };
 };
 
 const openSuccessNotification = epicName => {
   notification['success']({
     message: 'Successfully deleted epic',
-    description:
-      `Sucessfully deleted epic ${epicName}`,
+    description: `Sucessfully deleted epic ${epicName}`,
   });
 };
 
@@ -75,8 +74,8 @@ class Home extends Component {
     const listEpics = await listEpicsForUser();
 
     this.setState({
-      listOfEpics: listEpics.data.listEpics.items
-    })
+      listOfEpics: listEpics.data.listEpics.items,
+    });
   }
 
   async createEpic() {
@@ -105,10 +104,10 @@ class Home extends Component {
 
   async deleteCurrentEpic(epic) {
     const { key, name } = epic;
-    
+
     await deleteEpicForUser(key);
     openSuccessNotification(name);
-    
+
     this.listEpics();
   }
 
@@ -124,7 +123,11 @@ class Home extends Component {
             onDescriptionChange={this.setEpicDescription}
           />
           <br />
-          <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic} deleteEpic={this.deleteCurrentEpic}/>
+          <EpicTable
+            listOfEpics={listOfEpics}
+            viewEpic={this.viewCurrentEpic}
+            deleteEpic={this.deleteCurrentEpic}
+          />
         </div>
       </>
     );

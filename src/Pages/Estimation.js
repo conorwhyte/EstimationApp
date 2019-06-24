@@ -38,15 +38,15 @@ class Estimation extends Component {
   async componentDidMount() {
     const { search } = this.props.location;
     const { id } = parse(search);
-    
+
     const result = await getEpicForId(id);
     const storiesData = await this.getEpicStories();
-    
+
     const currentEpic = {
       id,
       title: result.data.getEpic.title,
-    }
-    
+    };
+
     subscription.subscribe({
       next: data => {
         if (data.value.data.onCreateStory.epicStoriesId === id) {
@@ -74,7 +74,7 @@ class Estimation extends Component {
   async getEpicStories() {
     const { search } = this.props.location;
     const { id } = parse(search);
-    
+
     return await listEpicStories(id);
   }
 
@@ -126,7 +126,10 @@ class Estimation extends Component {
             Create Story
           </Button>
 
-          <AddStoryModal {...addStoryModalProps} visible={showCreateStoryModal} />
+          <AddStoryModal
+            {...addStoryModalProps}
+            visible={showCreateStoryModal}
+          />
 
           <AddEstimation />
           <br />
@@ -137,11 +140,9 @@ class Estimation extends Component {
           >
             Set Estimation
           </Button>
-          
-          <Button onClick={this.getEpicStories}>
-            Get stories for epic
-          </Button>
-          
+
+          <Button onClick={this.getEpicStories}>Get stories for epic</Button>
+
           <br />
           <br />
 
@@ -150,12 +151,21 @@ class Estimation extends Component {
       </Content>
     );
 
-    const storiesData = stories.map(item => <span key={`${item.id}`}>{item.title}</span>)
+    const storiesData = stories.map(item => (
+      <span key={`${item.id}`}>{item.title}</span>
+    ));
 
     return (
       <Layout style={{ padding: '24px 0', background: '#fff' }}>
         {content}
-        <Sider width={200} reverseArrow={true} theme={'light'} style={{ background: '#fff' }} collapsible={true} collapsedWidth={20}>
+        <Sider
+          width={200}
+          reverseArrow={true}
+          theme={'light'}
+          style={{ background: '#fff' }}
+          collapsible={true}
+          collapsedWidth={20}
+        >
           <h3>Stories</h3>
           {storiesData}
         </Sider>
