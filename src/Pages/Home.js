@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { listEpicsForUser, deleteEpicForUser } from '../Actions/CreateQuiz';
 import { addEpicId } from '../Actions/epic.action';
 import { EpicCreationForm } from '../Components/EpicCreationFrom';
+import { Navbar } from '../Components/Navbar';
 import { EpicTable } from '../Components/EpicTable';
 import { getEpicId } from '../Store/Selectors/epic.selector';
 
@@ -73,8 +74,6 @@ class Home extends Component {
   async listEpics() {
     const listEpics = await listEpicsForUser();
 
-    console.log('listEpics: ', listEpics);
-
     this.setState({
       listOfEpics: listEpics.data.listEpics.items
     })
@@ -116,15 +115,18 @@ class Home extends Component {
   render() {
     const { listOfEpics } = this.state;
     return (
-      <div className="Home-body">
-        <EpicCreationForm
-          onCreate={this.createEpic}
-          onInputChange={this.setEpicName}
-          onDescriptionChange={this.setEpicDescription}
-        />
-        <br />
-        <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic} deleteEpic={this.deleteCurrentEpic}/>
-      </div>
+      <>
+        <Navbar />
+        <div className="Home-body">
+          <EpicCreationForm
+            onCreate={this.createEpic}
+            onInputChange={this.setEpicName}
+            onDescriptionChange={this.setEpicDescription}
+          />
+          <br />
+          <EpicTable listOfEpics={listOfEpics} viewEpic={this.viewCurrentEpic} deleteEpic={this.deleteCurrentEpic}/>
+        </div>
+      </>
     );
   }
 }
