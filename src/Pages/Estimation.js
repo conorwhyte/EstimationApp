@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Amplify, { API, graphqlOperation, Auth } from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
+import { connect } from 'react-redux';
 import aws_exports from '../aws-exports'; // specify the location of aws-exports.js file on your project
 import { parse } from 'query-string';
 import {
@@ -13,9 +14,28 @@ import * as subscriptions from '../graphql/subscriptions';
 import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
 import { StoriesDrawer } from '../Components/StoriesDrawer';
 import { Navbar } from '../Components/Navbar';
+import { getCurrentStoryId } from '../Store/Selectors/story.selector';
+import { addStoryId } from '../Actions/story.action';
+
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
+
+const mapStateToProps = state => ({
+  storyId: getCurrentStoryId(state),
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addCurrentStoryId: id => {
+      dispatch(addStoryId(id));
+    },
+  };
+};
+
+const getCurrentStory = (stories, storyId) => 
+  stories.filter(item => item.id === storyId)[0]
+
 
 const subscription = API.graphql(graphqlOperation(subscriptions.onCreateStory));
 
@@ -35,6 +55,7 @@ class Estimation extends Component {
     this.createStory = this.createStory.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
     this.showCreateModal = this.showCreateModal.bind(this);
+    this.addCurrentStory = this.addCurrentStory.bind(this);
   }
 
   async componentDidMount() {
@@ -98,6 +119,11 @@ class Estimation extends Component {
       showCreateStoryModal: flag,
     });
   }
+  
+  addCurrentStory(story) {
+    const { addCurrentStoryId } = this.props;
+    addCurrentStoryId(story);
+  }
 
   render() {
     const addStoryModalProps = {
@@ -106,50 +132,53 @@ class Estimation extends Component {
       showCreateModal: this.showCreateModal,
     };
     const { showCreateStoryModal, currentEpic, stories } = this.state;
-    const { history } = this.props;
+    const { history, storyId } = this.props;
     const { Content, Sider } = Layout;
+
+    const currentStory = getCurrentStory(stories, storyId);
 
     const content = (
       <Content>
         <div className="Estimation-body">
+          <div className='Estimation-body-header' >
+            <h3> Pick a story to be estimated or create one </h3>
 
-          <br />
-          <h3 style={{paddingLeft: '20px'}}> Story to be estimated: </h3>
+            <Button
+              onClick={() => {
+                this.showCreateModal(true);
+              }}> Create New Story 
+            </Button>
 
-          <Button
-            onClick={() => {
-              this.showCreateModal(true);
-            }}> Create New Story 
-          </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                this.showCreateModal(true);
+              }}> Complete Story 
+            </Button>
 
-          <Button
-            type="primary"
-            onClick={() => {
-              this.showCreateModal(true);
-            }}> Complete Story 
-          </Button>
-
-          <Button
-            type="danger"
-            onClick={() => {
-              this.showCreateModal(true);
-            }}> Delete Story 
-          </Button>
+            <Button
+              type="danger"
+              onClick={() => {
+                this.showCreateModal(true);
+              }}> Delete Story 
+            </Button>
+          </div>
 
           <AddStoryModal
             {...addStoryModalProps}
             visible={showCreateStoryModal}
           />
 
-          {/* <AddEstimation />
+          { currentStory && <AddEstimation storyTitle={currentStory.title || ''}/> }
+          
           <br />
+          
           <Button
             onClick={() => {
               this.showCreateModal(true);
             }}
-          >
-            Set Estimation
-          </Button> */}
+            style={{margin: 0}}
+          > Set Estimation </Button> 
 
           {/* <Button onClick={this.getEpicStories}>Get stories for epic</Button> */}
           {/* <UserAvatar /> */}
@@ -162,11 +191,14 @@ class Estimation extends Component {
         <Navbar title={currentEpic.title} history={history}/>
         <Layout style={{ background: '#fff' }}>
           {content}
-          <StoriesDrawer stories={stories} />
+          <StoriesDrawer viewStory={this.addCurrentStory} stories={stories} />
         </Layout>
       </>
     );
   }
 }
 
-export default withAuthenticator(Estimation, { includeGreetings: false });
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAuthenticator(Estimation, { includeGreetings: false }));

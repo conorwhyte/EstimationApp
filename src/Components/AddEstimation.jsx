@@ -8,7 +8,9 @@ const cardStyle = {
 
 export const AddEstimation = props => {
   return (
-    <div className="Estimation-cards">
+    <div className="Estimation-body-cards">
+      <h2>{ props.storyTitle }</h2>
+      <br />
       <Row gutter={16}>
         <Col span={5}>
           <Card title="WAG" hoverable style={cardStyle}>
