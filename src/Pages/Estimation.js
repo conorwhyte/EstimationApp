@@ -11,6 +11,8 @@ import {
 import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
 import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
+import { StoriesDrawer } from '../Components/StoriesDrawer';
+import { Navbar } from '../Components/Navbar';
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
@@ -47,13 +49,13 @@ class Estimation extends Component {
       title: result.data.getEpic.title,
     };
 
-    subscription.subscribe({
-      next: data => {
-        if (data.value.data.onCreateStory.epicStoriesId === id) {
-          console.log('Subscription succeeded');
-        }
-      },
-    });
+    // subscription.subscribe({
+    //   next: data => {
+    //     if (data.value.data.onCreateStory.epicStoriesId === id) {
+    //       console.log('Subscription succeeded');
+    //     }
+    //   },
+    // });
 
     this.setState({
       currentEpic,
@@ -62,7 +64,7 @@ class Estimation extends Component {
   }
 
   componentWillUnmount() {
-    subscription.unsubscribe();
+    // subscription.unsubscribe();
   }
 
   getCurrentUser() {
@@ -104,26 +106,34 @@ class Estimation extends Component {
       showCreateModal: this.showCreateModal,
     };
     const { showCreateStoryModal, currentEpic, stories } = this.state;
+    const { history } = this.props;
     const { Content, Sider } = Layout;
 
     const content = (
       <Content>
         <div className="Estimation-body">
-          <PageHeader
-            title={currentEpic.title}
-            subTitle="This is a subtitle"
-            // tags={<Tag color="red">Warning</Tag>}
-          />
 
-          <h1> Story Title </h1>
-          <h3> Give a short description here for the story. </h3>
+          <br />
+          <h3 style={{paddingLeft: '20px'}}> Story to be estimated: </h3>
 
           <Button
             onClick={() => {
               this.showCreateModal(true);
-            }}
-          >
-            Create Story
+            }}> Create New Story 
+          </Button>
+
+          <Button
+            type="primary"
+            onClick={() => {
+              this.showCreateModal(true);
+            }}> Complete Story 
+          </Button>
+
+          <Button
+            type="danger"
+            onClick={() => {
+              this.showCreateModal(true);
+            }}> Delete Story 
           </Button>
 
           <AddStoryModal
@@ -131,7 +141,7 @@ class Estimation extends Component {
             visible={showCreateStoryModal}
           />
 
-          <AddEstimation />
+          {/* <AddEstimation />
           <br />
           <Button
             onClick={() => {
@@ -139,37 +149,22 @@ class Estimation extends Component {
             }}
           >
             Set Estimation
-          </Button>
+          </Button> */}
 
-          <Button onClick={this.getEpicStories}>Get stories for epic</Button>
-
-          <br />
-          <br />
-
-          <UserAvatar />
+          {/* <Button onClick={this.getEpicStories}>Get stories for epic</Button> */}
+          {/* <UserAvatar /> */}
         </div>
       </Content>
     );
 
-    const storiesData = stories.map(item => (
-      <span key={`${item.id}`}>{item.title}</span>
-    ));
-
     return (
-      <Layout style={{ padding: '24px 0', background: '#fff' }}>
-        {content}
-        <Sider
-          width={200}
-          reverseArrow={true}
-          theme={'light'}
-          style={{ background: '#fff' }}
-          collapsible={true}
-          collapsedWidth={20}
-        >
-          <h3>Stories</h3>
-          {storiesData}
-        </Sider>
-      </Layout>
+      <>
+        <Navbar title={currentEpic.title} history={history}/>
+        <Layout style={{ background: '#fff' }}>
+          {content}
+          <StoriesDrawer stories={stories} />
+        </Layout>
+      </>
     );
   }
 }

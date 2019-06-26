@@ -1,6 +1,18 @@
 .Estimation {
   &-body {
-    padding-left: 20px;
+    padding-left: 10px;
+    display: table;
+    width: 100%;
+
+    h3 {
+      width: 20%;
+      display: table-cell;
+    }
+
+    button {
+      margin: 0 10px;
+      display: table-cell;
+    }
   }
 
   &-input {
