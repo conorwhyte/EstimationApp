@@ -13,6 +13,7 @@ import {
 import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
 import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
+import { StoryHeader } from '../Components/StoryHeader';
 import { StoriesDrawer } from '../Components/StoriesDrawer';
 import { Navbar } from '../Components/Navbar';
 import { getCurrentStoryId, getEstimatesForStories } from '../Store/Selectors/story.selector';
@@ -158,30 +159,8 @@ class Estimation extends Component {
     const content = (
       <Content>
         <div className="Estimation-body">
-          <div className='Estimation-body-header' >
-            <h3> Pick a story to be estimated or create one </h3>
-
-            <Button
-              onClick={() => {
-                this.showCreateModal(true);
-              }}> Create New Story 
-            </Button>
-
-            <Button
-              type="primary"
-              onClick={() => {
-                this.showCreateModal(true);
-              }}> Complete Story 
-            </Button>
-
-            <Button
-              type="danger"
-              onClick={() => {
-                this.showCreateModal(true);
-              }}> Delete Story 
-            </Button>
-          </div>
-
+          <StoryHeader showCreateModal={this.showCreateModal} />
+          
           <AddStoryModal {...addStoryModalProps}/>
 
           { currentStory && <AddEstimation storyTitle={currentStory.title || ''} sendEstimate={this.sendEstimate}/> }

@@ -1,20 +1,26 @@
 import React from 'react';
-import { Layout, Divider } from 'antd';
+import { Button } from 'antd';
 
-const { Sider } = Layout;
-
-export const StoriesDrawer = props => {
+export const StoryHeader = props => {
   return (
-    <Sider
-      width={200}
-      reverseArrow={true}
-      theme={'light'}
-      style={{ background: '#fff' }}
-      collapsible={true}
-      collapsedWidth={20}
-    >
-      <h3>Stories</h3>
-      { storiesData }
-    </Sider>
+    <div className='Estimation-body-header' >
+      <h3> Pick a story to be estimated or create one </h3>
+
+      <Button
+        onClick={() => {
+          props.showCreateModal(true)
+        }}> Create New Story 
+      </Button>
+
+      <Button
+        type="primary"
+        > Complete Story 
+      </Button>
+
+      <Button
+        type="danger"
+        > Delete Story 
+      </Button>
+    </div>
   );
 };
