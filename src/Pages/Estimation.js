@@ -8,21 +8,22 @@ import {
   createStoryForQuiz,
   getEpicForId,
   listEpicStories,
+  addEstimateForStory,
 } from '../Actions/CreateQuiz.ts';
 import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
 import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
 import { StoriesDrawer } from '../Components/StoriesDrawer';
 import { Navbar } from '../Components/Navbar';
-import { getCurrentStoryId } from '../Store/Selectors/story.selector';
-import { addStoryId } from '../Actions/story.action';
-
+import { getCurrentStoryId, getEstimatesForStories } from '../Store/Selectors/story.selector';
+import { addStoryId, addEstimateToStory } from '../Actions/story.action';
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
 
 const mapStateToProps = state => ({
   storyId: getCurrentStoryId(state),
+  estimateForStories: getEstimatesForStories(state),
 });
 
 const mapDispatchToProps = dispatch => {
@@ -30,14 +31,23 @@ const mapDispatchToProps = dispatch => {
     addCurrentStoryId: id => {
       dispatch(addStoryId(id));
     },
+    addEstimateForStory: (user, estimate) => {
+      dispatch(addEstimateToStory(user, estimate));
+    },
   };
+};
+
+const openSuccessNotification = (storyName, totalWag) => {
+  notification['success']({
+    message: 'Completed story',
+    description: `Story ${storyName} has been completed, with a total WAG of ${totalWag}`,
+  });
 };
 
 const getCurrentStory = (stories, storyId) => 
   stories.filter(item => item.id === storyId)[0]
 
-
-const subscription = API.graphql(graphqlOperation(subscriptions.onCreateStory));
+const subscription = API.graphql(graphqlOperation(subscriptions.onCreateEstimate));
 
 class Estimation extends Component {
   constructor(props) {
@@ -51,9 +61,10 @@ class Estimation extends Component {
       stories: [],
     };
 
-    this.getEpicStories = this.getEpicStories.bind(this);
     this.createStory = this.createStory.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
+    this.sendEstimate = this.sendEstimate.bind(this);
+    this.getEpicStories = this.getEpicStories.bind(this);
     this.showCreateModal = this.showCreateModal.bind(this);
     this.addCurrentStory = this.addCurrentStory.bind(this);
   }
@@ -61,22 +72,22 @@ class Estimation extends Component {
   async componentDidMount() {
     const { search } = this.props.location;
     const { id } = parse(search);
-
     const result = await getEpicForId(id);
     const storiesData = await this.getEpicStories();
-
     const currentEpic = {
       id,
       title: result.data.getEpic.title,
     };
 
-    // subscription.subscribe({
-    //   next: data => {
-    //     if (data.value.data.onCreateStory.epicStoriesId === id) {
-    //       console.log('Subscription succeeded');
-    //     }
-    //   },
-    // });
+    subscription.subscribe({
+      next: data => {
+        const { storyId, addEstimateForStory } = this.props;
+        const creationData = data.value.data.onCreateEstimate;
+        if (creationData.story.id === storyId) {
+          addEstimateForStory(creationData.user, creationData.estimate);
+        }
+      },
+    });
 
     this.setState({
       currentEpic,
@@ -125,17 +136,24 @@ class Estimation extends Component {
     addCurrentStoryId(story);
   }
 
+  async sendEstimate(estimate) {
+    const { storyId, authData } = this.props;
+    await addEstimateForStory(storyId, estimate, authData.username);
+  }
+
   render() {
+    const { showCreateStoryModal, currentEpic, stories } = this.state;
+    const { history, storyId, estimateForStories } = this.props;
+    const { Content, Sider } = Layout;
+    const currentStory = getCurrentStory(stories, storyId);
     const addStoryModalProps = {
       loading: false,
       createStory: this.createStory,
       showCreateModal: this.showCreateModal,
+      visible: showCreateStoryModal
     };
-    const { showCreateStoryModal, currentEpic, stories } = this.state;
-    const { history, storyId } = this.props;
-    const { Content, Sider } = Layout;
 
-    const currentStory = getCurrentStory(stories, storyId);
+   const users = estimateForStories.map(item => <UserAvatar key={item.user} user={item.user} estimate={item.estimate} />);
 
     const content = (
       <Content>
@@ -164,24 +182,14 @@ class Estimation extends Component {
             </Button>
           </div>
 
-          <AddStoryModal
-            {...addStoryModalProps}
-            visible={showCreateStoryModal}
-          />
+          <AddStoryModal {...addStoryModalProps}/>
 
-          { currentStory && <AddEstimation storyTitle={currentStory.title || ''}/> }
-          
+          { currentStory && <AddEstimation storyTitle={currentStory.title || ''} sendEstimate={this.sendEstimate}/> }
+
+          <br />
           <br />
           
-          <Button
-            onClick={() => {
-              this.showCreateModal(true);
-            }}
-            style={{margin: 0}}
-          > Set Estimation </Button> 
-
-          {/* <Button onClick={this.getEpicStories}>Get stories for epic</Button> */}
-          {/* <UserAvatar /> */}
+          { users }
         </div>
       </Content>
     );

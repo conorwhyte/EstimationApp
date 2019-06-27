@@ -1,7 +1,7 @@
 .Estimation {
   &-body {
     padding-left: 20px;
-    
+    height: 85vh;
 
     &-header {
       display: table;
@@ -32,16 +32,6 @@
 
     input, button {
       margin: 10px;
-    }
-  }
-  
-  &-avatar {
-    display: flex;
-    height: 40px;
-    align-items: center;
-
-    h2 {
-      padding-left: 10px;
     }
   }
 }

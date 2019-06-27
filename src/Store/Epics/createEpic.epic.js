@@ -8,7 +8,6 @@ import { createEpic as createEpicMutation } from '../../graphql/mutations';
 
 const api = {
   putEpic: (query, variables) => {
-    console.log('CONOR: ', variables);
     const createEpicInput = {
       title: variables.title,
       description: variables.description,

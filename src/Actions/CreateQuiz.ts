@@ -1,7 +1,7 @@
 import retry from 'async-retry'
 import { API, graphqlOperation } from 'aws-amplify'
 import { QNewEpic, ListEpicStories, QNewStory, ListEpics } from './ApiActions'
-import { createStory, deleteEpic } from '../graphql/mutations'
+import { createStory, deleteEpic, createEstimate } from '../graphql/mutations'
 import { getEpic, listEpics } from '../graphql/queries';
 import { CreateStoryInput, DeleteEpicInput } from '../API';
 import 'babel-polyfill'
@@ -12,6 +12,17 @@ export async function createStoryForQuiz(epicId, title) {
     epicStoriesId: epicId,
   };
   const resp = await GqlRetry(createStory, {input: createStoryInput});
+  
+  return resp.data;
+}
+
+export async function addEstimateForStory(storyId, estimate, user) {
+  const createEstimateInput: CreateEstimateInput = {
+    estimate,
+    estimateStoryId: storyId,
+    user,
+  };
+  const resp = await GqlRetry(createEstimate, {input: createEstimateInput});
   
   return resp.data;
 }
