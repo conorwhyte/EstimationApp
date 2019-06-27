@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html",
+    "build": "parcel build index.html --no-source-maps",
     "test": "jest --watch",
     "clean": "rm -rf node_modules dist yarn.lock .cache && yarn",
     "puppet": "node tests/smokeTest.js",
