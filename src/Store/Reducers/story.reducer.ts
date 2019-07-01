@@ -1,6 +1,7 @@
 import {
   ADD_CURRENT_STORY,
   ADD_ESTIMATE_TO_STORY,
+  BULK_ADD_ESTIMATES_TO_STORY,
 } from '../../Actions/story.action'
 
 interface AppState {
@@ -28,6 +29,12 @@ const story = (state = initialState, action) => {
           user,
           estimate,
         }],
+      };
+    case BULK_ADD_ESTIMATES_TO_STORY: 
+      const { estimates } = action;
+      return {
+        ...state,
+        storiesEstimates: [...state.storiesEstimates, ...estimates],
       };
     default:
       return state

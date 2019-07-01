@@ -9,6 +9,7 @@ import {
   getEpicForId,
   listEpicStories,
   addEstimateForStory,
+  listStoriesEstimate,
 } from '../Actions/CreateQuiz.ts';
 import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
@@ -17,7 +18,7 @@ import { StoryHeader } from '../Components/StoryHeader';
 import { StoriesDrawer } from '../Components/StoriesDrawer';
 import { Navbar } from '../Components/Navbar';
 import { getCurrentStoryId, getEstimatesForStories } from '../Store/Selectors/story.selector';
-import { addStoryId, addEstimateToStory } from '../Actions/story.action';
+import { addStoryId, addEstimateToStory, bulkAddEstimatesToStories } from '../Actions/story.action';
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
@@ -34,6 +35,9 @@ const mapDispatchToProps = dispatch => {
     },
     addEstimateForStory: (user, estimate) => {
       dispatch(addEstimateToStory(user, estimate));
+    },
+    bulkAddEstimatesForStory: estimates => {
+      dispatch(bulkAddEstimatesToStories(estimates))
     },
   };
 };
@@ -65,6 +69,7 @@ class Estimation extends Component {
     this.createStory = this.createStory.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
     this.sendEstimate = this.sendEstimate.bind(this);
+    this.listEstimates = this.listEstimates.bind(this);
     this.getEpicStories = this.getEpicStories.bind(this);
     this.showCreateModal = this.showCreateModal.bind(this);
     this.addCurrentStory = this.addCurrentStory.bind(this);
@@ -135,11 +140,20 @@ class Estimation extends Component {
   addCurrentStory(story) {
     const { addCurrentStoryId } = this.props;
     addCurrentStoryId(story);
+    this.listEstimates(story);
   }
 
   async sendEstimate(estimate) {
     const { storyId, authData } = this.props;
     await addEstimateForStory(storyId, estimate, authData.username);
+  }
+
+  async listEstimates(storyId) {
+    const { bulkAddEstimatesForStory } = this.props;
+    const estimates = await listStoriesEstimate(storyId);
+    const { items } = estimates.data.listEstimates;
+    
+    bulkAddEstimatesForStory(items);
   }
 
   render() {
@@ -154,8 +168,13 @@ class Estimation extends Component {
       visible: showCreateStoryModal
     };
 
-   const users = estimateForStories.map(item => <UserAvatar key={item.user} user={item.user} estimate={item.estimate} />);
-
+   const users = estimateForStories.map(item => <UserAvatar key={item.id} user={item.user} estimate={item.estimate} />);
+   const totalWAG = estimateForStories.reduce((a, b) => a + b.estimate, 0); 
+   
+   if (totalWAG > 0) {
+    users.push(<UserAvatar key='Total' user='Total' estimate={totalWAG} />);
+   }
+   
     const content = (
       <Content>
         <div className="Estimation-body">
@@ -169,6 +188,8 @@ class Estimation extends Component {
           <br />
           
           { users }
+
+          <br />
         </div>
       </Content>
     );
