@@ -16,6 +16,7 @@ type Story @model(queries: {list: "listStories", get: "getStory"}) @versioned {
   tags: [String]
   links: [String]
   avgEstimate: Float
+  actualEstimate: Float
   estimates: [Estimate] @connection(name: "Estimations")
 }
 

@@ -63,9 +63,6 @@ query MyEpics {
     }
 }`;
 
-// estimates {
-//   items { id title }
-// }
 export const ListEpicStories = `
 query MyStories ($epicID: ID!){
     getEpic(id: $epicID) {
@@ -77,6 +74,19 @@ query MyStories ($epicID: ID!){
                 links
                 description
                 
+            }
+        }
+    }
+}`;
+
+export const ListStoriesEstimates = `
+query MyEstimates ($epicStoriesId: ID!){
+    getStory(id: $epicStoriesId) {
+        estimates (limit: 20) {
+            items {
+                id
+                estimate
+                user                
             }
         }
     }

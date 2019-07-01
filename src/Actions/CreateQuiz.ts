@@ -1,9 +1,9 @@
 import retry from 'async-retry'
 import { API, graphqlOperation } from 'aws-amplify'
-import { QNewEpic, ListEpicStories, QNewStory, ListEpics } from './ApiActions'
+import { ListEpicStories, QNewStory, ListEpics, ListStoriesEstimates } from './ApiActions'
 import { createStory, deleteEpic, createEstimate } from '../graphql/mutations'
 import { getEpic, listEpics, listEstimates } from '../graphql/queries';
-import { CreateStoryInput, DeleteEpicInput } from '../API';
+import { CreateStoryInput, DeleteEpicInput, ModelEstimateFilterInput } from '../API';
 import 'babel-polyfill'
 
 export async function createStoryForQuiz(epicId, title) {
@@ -50,7 +50,16 @@ export async function listEpicStories(epicID) {
 }
 
 export async function listStoriesEstimate(storyId) {
-  return await API.graphql(graphqlOperation(listEstimates, { epicStoriesId: storyId }));
+  // const filterInput: ModelEstimateFilterInput = {
+  //   id: {
+  //     eq: storyId,
+  //   }
+  // };
+  // const response = await API.graphql(graphqlOperation(listEstimates, { filter: filterInput}));
+  // console.log('RESPONE', response);
+  // return response;
+
+  return await API.graphql(graphqlOperation(ListStoriesEstimates, { epicStoriesId: storyId}));
 }
 
 const GqlRetry = async (query, variables) => {

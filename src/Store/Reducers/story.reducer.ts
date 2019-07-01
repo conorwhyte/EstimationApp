@@ -2,6 +2,7 @@ import {
   ADD_CURRENT_STORY,
   ADD_ESTIMATE_TO_STORY,
   BULK_ADD_ESTIMATES_TO_STORY,
+  CLEAR_CURRENT_STORY,
 } from '../../Actions/story.action'
 
 interface AppState {
@@ -36,6 +37,11 @@ const story = (state = initialState, action) => {
         ...state,
         storiesEstimates: [...state.storiesEstimates, ...estimates],
       };
+    case CLEAR_CURRENT_STORY:
+      return {
+        ...state,
+        ...initialState,
+      }
     default:
       return state
   }

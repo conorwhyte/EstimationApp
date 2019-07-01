@@ -17,8 +17,16 @@ import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
 import { StoryHeader } from '../Components/StoryHeader';
 import { StoriesDrawer } from '../Components/StoriesDrawer';
 import { Navbar } from '../Components/Navbar';
-import { getCurrentStoryId, getEstimatesForStories } from '../Store/Selectors/story.selector';
-import { addStoryId, addEstimateToStory, bulkAddEstimatesToStories } from '../Actions/story.action';
+import {
+  getCurrentStoryId,
+  getEstimatesForStories,
+} from '../Store/Selectors/story.selector';
+import {
+  addStoryId,
+  addEstimateToStory,
+  bulkAddEstimatesToStories,
+  clearCurrentStory,
+} from '../Actions/story.action';
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
@@ -37,7 +45,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(addEstimateToStory(user, estimate));
     },
     bulkAddEstimatesForStory: estimates => {
-      dispatch(bulkAddEstimatesToStories(estimates))
+      dispatch(bulkAddEstimatesToStories(estimates));
+    },
+    completeCurrentStory: () => {
+      dispatch(clearCurrentStory());
     },
   };
 };
@@ -49,10 +60,12 @@ const openSuccessNotification = (storyName, totalWag) => {
   });
 };
 
-const getCurrentStory = (stories, storyId) => 
-  stories.filter(item => item.id === storyId)[0]
+const getCurrentStory = (stories, storyId) =>
+  stories.filter(item => item.id === storyId)[0];
 
-const subscription = API.graphql(graphqlOperation(subscriptions.onCreateEstimate));
+const subscription = API.graphql(
+  graphqlOperation(subscriptions.onCreateEstimate)
+);
 
 class Estimation extends Component {
   constructor(props) {
@@ -66,6 +79,7 @@ class Estimation extends Component {
       stories: [],
     };
 
+    this.clearStory = this.clearStory.bind(this);
     this.createStory = this.createStory.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
     this.sendEstimate = this.sendEstimate.bind(this);
@@ -136,10 +150,17 @@ class Estimation extends Component {
       showCreateStoryModal: flag,
     });
   }
-  
+
+  clearStory() {
+    // Add the estimate and clear the store
+    const { completeCurrentStory } = this.props;
+    completeCurrentStory();
+  }
+
   addCurrentStory(story) {
     const { addCurrentStoryId } = this.props;
     addCurrentStoryId(story);
+
     this.listEstimates(story);
   }
 
@@ -151,8 +172,8 @@ class Estimation extends Component {
   async listEstimates(storyId) {
     const { bulkAddEstimatesForStory } = this.props;
     const estimates = await listStoriesEstimate(storyId);
-    const { items } = estimates.data.listEstimates;
-    
+    const { items } = estimates.data.getStory.estimates;
+
     bulkAddEstimatesForStory(items);
   }
 
@@ -165,29 +186,48 @@ class Estimation extends Component {
       loading: false,
       createStory: this.createStory,
       showCreateModal: this.showCreateModal,
-      visible: showCreateStoryModal
+      visible: showCreateStoryModal,
     };
 
-   const users = estimateForStories.map(item => <UserAvatar key={item.id} user={item.user} estimate={item.estimate} />);
-   const totalWAG = estimateForStories.reduce((a, b) => a + b.estimate, 0); 
-   
-   if (totalWAG > 0) {
-    users.push(<UserAvatar key='Total' user='Total' estimate={totalWAG} />);
-   }
-   
+    const users = estimateForStories.map(item => (
+      <UserAvatar key={item.id} user={item.user} estimate={item.estimate} />
+    ));
+
+    const averageWAG =
+      estimateForStories.reduce((a, b) => a + b.estimate, 0) /
+      estimateForStories.length;
+
+    if (averageWAG > 0) {
+      users.push(
+        <UserAvatar
+          key="Average"
+          user="Average"
+          estimate={averageWAG.toFixed(2)}
+        />
+      );
+    }
+
     const content = (
       <Content>
         <div className="Estimation-body">
-          <StoryHeader showCreateModal={this.showCreateModal} />
-          
-          <AddStoryModal {...addStoryModalProps}/>
+          <StoryHeader
+            showCreateModal={this.showCreateModal}
+            clearStory={this.clearStory}
+          />
 
-          { currentStory && <AddEstimation storyTitle={currentStory.title || ''} sendEstimate={this.sendEstimate}/> }
+          <AddStoryModal {...addStoryModalProps} />
+
+          {currentStory && (
+            <AddEstimation
+              storyTitle={currentStory.title || ''}
+              sendEstimate={this.sendEstimate}
+            />
+          )}
 
           <br />
           <br />
-          
-          { users }
+
+          {users}
 
           <br />
         </div>
@@ -196,7 +236,7 @@ class Estimation extends Component {
 
     return (
       <>
-        <Navbar title={currentEpic.title} history={history}/>
+        <Navbar title={currentEpic.title} history={history} />
         <Layout style={{ background: '#fff' }}>
           {content}
           <StoriesDrawer viewStory={this.addCurrentStory} stories={stories} />
