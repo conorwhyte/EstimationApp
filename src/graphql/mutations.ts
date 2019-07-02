@@ -18,6 +18,7 @@ export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
         tags
         links
         avgEstimate
+        actualEstimate
         version
       }
       nextToken
@@ -43,6 +44,7 @@ export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
         tags
         links
         avgEstimate
+        actualEstimate
         version
       }
       nextToken
@@ -68,6 +70,7 @@ export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
         tags
         links
         avgEstimate
+        actualEstimate
         version
       }
       nextToken
@@ -85,6 +88,7 @@ export const createStory = `mutation CreateStory($input: CreateStoryInput!) {
     tags
     links
     avgEstimate
+    actualEstimate
     estimates {
       items {
         id
@@ -107,6 +111,7 @@ export const updateStory = `mutation UpdateStory($input: UpdateStoryInput!) {
     tags
     links
     avgEstimate
+    actualEstimate
     estimates {
       items {
         id
@@ -129,6 +134,7 @@ export const deleteStory = `mutation DeleteStory($input: DeleteStoryInput!) {
     tags
     links
     avgEstimate
+    actualEstimate
     estimates {
       items {
         id
@@ -155,6 +161,7 @@ export const createEstimate = `mutation CreateEstimate($input: CreateEstimateInp
       tags
       links
       avgEstimate
+      actualEstimate
       estimates {
         nextToken
       }
@@ -177,6 +184,7 @@ export const updateEstimate = `mutation UpdateEstimate($input: UpdateEstimateInp
       tags
       links
       avgEstimate
+      actualEstimate
       estimates {
         nextToken
       }
@@ -199,6 +207,7 @@ export const deleteEstimate = `mutation DeleteEstimate($input: DeleteEstimateInp
       tags
       links
       avgEstimate
+      actualEstimate
       estimates {
         nextToken
       }

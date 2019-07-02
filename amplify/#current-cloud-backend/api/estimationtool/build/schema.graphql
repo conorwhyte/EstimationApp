@@ -17,6 +17,7 @@ type Story {
   tags: [String]
   links: [String]
   avgEstimate: Float
+  actualEstimate: Float
   estimates(filter: ModelEstimateFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelEstimateConnection
   version: Int!
 }
@@ -176,6 +177,7 @@ input ModelStoryFilterInput {
   tags: ModelStringFilterInput
   links: ModelStringFilterInput
   avgEstimate: ModelFloatFilterInput
+  actualEstimate: ModelFloatFilterInput
   and: [ModelStoryFilterInput]
   or: [ModelStoryFilterInput]
   not: ModelStoryFilterInput
@@ -189,6 +191,7 @@ input CreateStoryInput {
   tags: [String]
   links: [String]
   avgEstimate: Float
+  actualEstimate: Float
 }
 
 input UpdateStoryInput {
@@ -199,6 +202,7 @@ input UpdateStoryInput {
   tags: [String]
   links: [String]
   avgEstimate: Float
+  actualEstimate: Float
   expectedVersion: Int!
 }
 

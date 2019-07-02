@@ -18,6 +18,7 @@ export const onCreateEpic = `subscription OnCreateEpic {
         tags
         links
         avgEstimate
+        actualEstimate
         version
       }
       nextToken
@@ -43,6 +44,7 @@ export const onUpdateEpic = `subscription OnUpdateEpic {
         tags
         links
         avgEstimate
+        actualEstimate
         version
       }
       nextToken
@@ -68,6 +70,7 @@ export const onDeleteEpic = `subscription OnDeleteEpic {
         tags
         links
         avgEstimate
+        actualEstimate
         version
       }
       nextToken
@@ -85,6 +88,7 @@ export const onCreateStory = `subscription OnCreateStory {
     tags
     links
     avgEstimate
+    actualEstimate
     estimates {
       items {
         id
@@ -107,6 +111,7 @@ export const onUpdateStory = `subscription OnUpdateStory {
     tags
     links
     avgEstimate
+    actualEstimate
     estimates {
       items {
         id
@@ -129,6 +134,7 @@ export const onDeleteStory = `subscription OnDeleteStory {
     tags
     links
     avgEstimate
+    actualEstimate
     estimates {
       items {
         id
@@ -155,6 +161,7 @@ export const onCreateEstimate = `subscription OnCreateEstimate {
       tags
       links
       avgEstimate
+      actualEstimate
       estimates {
         nextToken
       }
@@ -177,6 +184,7 @@ export const onUpdateEstimate = `subscription OnUpdateEstimate {
       tags
       links
       avgEstimate
+      actualEstimate
       estimates {
         nextToken
       }
@@ -199,6 +207,7 @@ export const onDeleteEstimate = `subscription OnDeleteEstimate {
       tags
       links
       avgEstimate
+      actualEstimate
       estimates {
         nextToken
       }

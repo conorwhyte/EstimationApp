@@ -33,6 +33,7 @@ export type CreateStoryInput = {
   tags?: Array< string | null > | null,
   links?: Array< string | null > | null,
   avgEstimate?: number | null,
+  actualEstimate?: number | null,
 };
 
 export type UpdateStoryInput = {
@@ -43,6 +44,7 @@ export type UpdateStoryInput = {
   tags?: Array< string | null > | null,
   links?: Array< string | null > | null,
   avgEstimate?: number | null,
+  actualEstimate?: number | null,
   expectedVersion: number,
 };
 
@@ -129,6 +131,7 @@ export type ModelStoryFilterInput = {
   tags?: ModelStringFilterInput | null,
   links?: ModelStringFilterInput | null,
   avgEstimate?: ModelFloatFilterInput | null,
+  actualEstimate?: ModelFloatFilterInput | null,
   and?: Array< ModelStoryFilterInput | null > | null,
   or?: Array< ModelStoryFilterInput | null > | null,
   not?: ModelStoryFilterInput | null,
@@ -167,6 +170,7 @@ export type CreateEpicMutation = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -199,6 +203,7 @@ export type UpdateEpicMutation = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -231,6 +236,7 @@ export type DeleteEpicMutation = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -253,6 +259,7 @@ export type CreateStoryMutation = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -282,6 +289,7 @@ export type UpdateStoryMutation = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -311,6 +319,7 @@ export type DeleteStoryMutation = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -345,6 +354,7 @@ export type CreateEstimateMutation = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -374,6 +384,7 @@ export type UpdateEstimateMutation = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -403,6 +414,7 @@ export type DeleteEstimateMutation = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -437,6 +449,7 @@ export type GetEpicQuery = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -486,6 +499,7 @@ export type GetStoryQuery = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -519,6 +533,7 @@ export type ListStoriesQuery = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -548,6 +563,7 @@ export type GetEstimateQuery = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -581,6 +597,7 @@ export type ListEstimatesQuery = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null,
       version: number,
@@ -609,6 +626,7 @@ export type OnCreateEpicSubscription = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -637,6 +655,7 @@ export type OnUpdateEpicSubscription = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -665,6 +684,7 @@ export type OnDeleteEpicSubscription = {
         tags: Array< string | null > | null,
         links: Array< string | null > | null,
         avgEstimate: number | null,
+        actualEstimate: number | null,
         version: number,
       } | null > | null,
       nextToken: string | null,
@@ -683,6 +703,7 @@ export type OnCreateStorySubscription = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -708,6 +729,7 @@ export type OnUpdateStorySubscription = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -733,6 +755,7 @@ export type OnDeleteStorySubscription = {
     tags: Array< string | null > | null,
     links: Array< string | null > | null,
     avgEstimate: number | null,
+    actualEstimate: number | null,
     estimates:  {
       __typename: "ModelEstimateConnection",
       items:  Array< {
@@ -763,6 +786,7 @@ export type OnCreateEstimateSubscription = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -788,6 +812,7 @@ export type OnUpdateEstimateSubscription = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,
@@ -813,6 +838,7 @@ export type OnDeleteEstimateSubscription = {
       tags: Array< string | null > | null,
       links: Array< string | null > | null,
       avgEstimate: number | null,
+      actualEstimate: number | null,
       estimates:  {
         __typename: "ModelEstimateConnection",
         nextToken: string | null,

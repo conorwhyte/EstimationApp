@@ -10,10 +10,16 @@ import {
   listEpicStories,
   addEstimateForStory,
   listStoriesEstimate,
+  completeStory,
 } from '../Actions/CreateQuiz.ts';
 import { Button, PageHeader, Tag, Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
-import { AddStoryModal, AddEstimation, UserAvatar } from '../Components';
+import {
+  AddStoryModal,
+  AddEstimation,
+  UserAvatar,
+  CompleteStoryModal,
+} from '../Components';
 import { StoryHeader } from '../Components/StoryHeader';
 import { StoriesDrawer } from '../Components/StoriesDrawer';
 import { Navbar } from '../Components/Navbar';
@@ -75,18 +81,10 @@ class Estimation extends Component {
       ...props.location.state,
       storyTitle: '',
       showCreateStoryModal: false,
+      showCompleteStoryModal: false,
       currentEpic: {},
       stories: [],
     };
-
-    this.clearStory = this.clearStory.bind(this);
-    this.createStory = this.createStory.bind(this);
-    this.changeTitle = this.changeTitle.bind(this);
-    this.sendEstimate = this.sendEstimate.bind(this);
-    this.listEstimates = this.listEstimates.bind(this);
-    this.getEpicStories = this.getEpicStories.bind(this);
-    this.showCreateModal = this.showCreateModal.bind(this);
-    this.addCurrentStory = this.addCurrentStory.bind(this);
   }
 
   async componentDidMount() {
@@ -115,70 +113,85 @@ class Estimation extends Component {
     });
   }
 
-  componentWillUnmount() {
-    // subscription.unsubscribe();
-  }
-
-  getCurrentUser() {
+  getCurrentUser = () => {
     Auth.currentAuthenticatedUser().then(user => {
       this.setState({ user });
     });
-  }
+  };
 
-  async getEpicStories() {
+  getEpicStories = async () => {
     const { search } = this.props.location;
     const { id } = parse(search);
 
     return await listEpicStories(id);
-  }
+  };
 
-  async createStory(input) {
+  createStory = async input => {
     const { search } = this.props.location;
     const { id } = parse(search);
 
     await createStoryForQuiz(id, input);
-  }
+  };
 
-  changeTitle(event) {
+  changeTitle = event => {
     this.setState({
       storyTitle: event.target.value,
     });
-  }
+  };
 
-  showCreateModal(flag) {
+  showCreateModal = flag => {
     this.setState({
       showCreateStoryModal: flag,
     });
-  }
+  };
 
-  clearStory() {
-    // Add the estimate and clear the store
-    const { completeCurrentStory } = this.props;
+  showCompleteModal = flag => {
+    this.setState({
+      showCompleteStoryModal: flag,
+    });
+  };
+
+  clearAndUpdateStory = async value => {
+    const { completeCurrentStory, storyId } = this.props;
+    const { stories } = this.state;
+    const { version } = getCurrentStory(stories, storyId);
+
     completeCurrentStory();
-  }
 
-  addCurrentStory(story) {
+    this.setState({
+      showCompleteStoryModal: false,
+    });
+
+    await completeStory({ storyId, version }, value);
+  };
+
+  addCurrentStory = story => {
     const { addCurrentStoryId } = this.props;
     addCurrentStoryId(story);
 
     this.listEstimates(story);
-  }
+  };
 
-  async sendEstimate(estimate) {
+  sendEstimate = async estimate => {
     const { storyId, authData } = this.props;
     await addEstimateForStory(storyId, estimate, authData.username);
-  }
+  };
 
-  async listEstimates(storyId) {
+  listEstimates = async storyId => {
     const { bulkAddEstimatesForStory } = this.props;
     const estimates = await listStoriesEstimate(storyId);
     const { items } = estimates.data.getStory.estimates;
 
     bulkAddEstimatesForStory(items);
-  }
+  };
 
   render() {
-    const { showCreateStoryModal, currentEpic, stories } = this.state;
+    const {
+      showCreateStoryModal,
+      currentEpic,
+      stories,
+      showCompleteStoryModal,
+    } = this.state;
     const { history, storyId, estimateForStories } = this.props;
     const { Content, Sider } = Layout;
     const currentStory = getCurrentStory(stories, storyId);
@@ -189,13 +202,21 @@ class Estimation extends Component {
       visible: showCreateStoryModal,
     };
 
-    const users = estimateForStories.map(item => (
-      <UserAvatar key={item.id} user={item.user} estimate={item.estimate} />
-    ));
-
     const averageWAG =
       estimateForStories.reduce((a, b) => a + b.estimate, 0) /
       estimateForStories.length;
+
+    const completeStoryModalProps = {
+      loading: false,
+      completeStory: this.clearAndUpdateStory,
+      showCreateModal: this.showCompleteModal,
+      visible: showCompleteStoryModal,
+      storyWAG: averageWAG.toFixed(2),
+    };
+
+    const users = estimateForStories.map(item => (
+      <UserAvatar key={item.id} user={item.user} estimate={item.estimate} />
+    ));
 
     if (averageWAG > 0) {
       users.push(
@@ -212,10 +233,12 @@ class Estimation extends Component {
         <div className="Estimation-body">
           <StoryHeader
             showCreateModal={this.showCreateModal}
-            clearStory={this.clearStory}
+            showCompleteModal={this.showCompleteModal}
           />
 
           <AddStoryModal {...addStoryModalProps} />
+
+          <CompleteStoryModal {...completeStoryModalProps} />
 
           {currentStory && (
             <AddEstimation
@@ -224,8 +247,7 @@ class Estimation extends Component {
             />
           )}
 
-          <br />
-          <br />
+          <div style={{ padding: '20px 0' }} />
 
           {users}
 

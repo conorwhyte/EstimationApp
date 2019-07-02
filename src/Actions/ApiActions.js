@@ -73,7 +73,7 @@ query MyStories ($epicID: ID!){
                 title
                 links
                 description
-                
+                version
             }
         }
     }

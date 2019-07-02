@@ -15,7 +15,12 @@ export const StoryHeader = props => {
         Create New Story
       </Button>
 
-      <Button type="primary" onClick={props.clearStory}>
+      <Button
+        type="primary"
+        onClick={() => {
+          props.showCompleteModal(true);
+        }}
+      >
         Complete Story
       </Button>
 
