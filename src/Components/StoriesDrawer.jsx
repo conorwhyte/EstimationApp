@@ -10,7 +10,7 @@ export const StoriesDrawer = props => {
 
   return (
     <Sider
-      width={240}
+      width={280}
       reverseArrow={true}
       style={{ background: '#fff' }}
       collapsible={false}
@@ -21,32 +21,6 @@ export const StoriesDrawer = props => {
       {storiesData}
     </Sider>
   );
-  // return (
-  //   <Sider collapsible collapsed={false} style={{marginTop: '-25px'}}>
-  //     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-  //       <Menu.Item key="1">
-  //         <span>Option 1</span>
-  //       </Menu.Item>
-  //       <Menu.Item key="2">
-  //         <span>Option 2</span>
-  //       </Menu.Item>
-  //       <SubMenu
-  //         key="sub2"
-  //         title={
-  //           <span>
-  //             <span>Team</span>
-  //           </span>
-  //         }
-  //       >
-  //         <Menu.Item key="6">Team 1</Menu.Item>
-  //         <Menu.Item key="8">Team 2</Menu.Item>
-  //       </SubMenu>
-  //       <Menu.Item key="9">
-  //         <span>File</span>
-  //       </Menu.Item>
-  //     </Menu>
-  //   </Sider>
-  // );
 };
 
 const StoryItem = props => (
