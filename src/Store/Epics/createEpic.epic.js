@@ -1,7 +1,6 @@
 import { mergeMap, map } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
-import { CREATE_EPIC } from '../../Actions/epic.action';
-import { addEpicId } from '../../Actions/epic.action';
+import { CREATE_EPIC, addEpicId } from '../../Actions';
 import { from } from 'rxjs';
 import { API, graphqlOperation } from 'aws-amplify';
 import { createEpic as createEpicMutation } from '../../graphql/mutations';

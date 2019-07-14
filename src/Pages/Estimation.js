@@ -11,28 +11,26 @@ import {
   addEstimateForStory,
   listStoriesEstimate,
   completeStory,
-} from '../Actions/CreateQuiz.ts';
-import { Button, PageHeader, Tag, Layout } from 'antd';
+  addStoryId,
+  addEstimateToStory,
+  bulkAddEstimatesToStories,
+  clearCurrentStory,
+} from '../Actions';
+import { Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
 import {
   AddStoryModal,
   AddEstimation,
   UserAvatar,
   CompleteStoryModal,
+  Navbar,
+  StoriesDrawer,
+  StoryHeader,
 } from '../Components';
-import { StoryHeader } from '../Components/StoryHeader';
-import { StoriesDrawer } from '../Components/StoriesDrawer';
-import { Navbar } from '../Components/Navbar';
 import {
   getCurrentStoryId,
   getEstimatesForStories,
 } from '../Store/Selectors/story.selector';
-import {
-  addStoryId,
-  addEstimateToStory,
-  bulkAddEstimatesToStories,
-  clearCurrentStory,
-} from '../Actions/story.action';
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
@@ -57,13 +55,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(clearCurrentStory());
     },
   };
-};
-
-const openSuccessNotification = (storyName, totalWag) => {
-  notification['success']({
-    message: 'Completed story',
-    description: `Story ${storyName} has been completed, with a total WAG of ${totalWag}`,
-  });
 };
 
 const getCurrentStory = (stories, storyId) =>
@@ -193,7 +184,7 @@ class Estimation extends Component {
       showCompleteStoryModal,
     } = this.state;
     const { history, storyId, estimateForStories } = this.props;
-    const { Content, Sider } = Layout;
+    const { Content } = Layout;
     const currentStory = getCurrentStory(stories, storyId);
     const addStoryModalProps = {
       loading: false,

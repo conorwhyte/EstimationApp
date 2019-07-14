@@ -5,11 +5,9 @@ import { withAuthenticator } from 'aws-amplify-react';
 import aws_exports from '../aws-exports'; // specify the location of aws-exports.js file on your project
 import { createEpic } from '../Actions/epic.action';
 import { connect } from 'react-redux';
-import { listEpicsForUser, deleteEpicForUser } from '../Actions/CreateQuiz';
+import { listEpicsForUser, deleteEpicForUser } from '../Actions/api.service';
 import { addEpicId } from '../Actions/epic.action';
-import { EpicCreationForm } from '../Components/EpicCreationFrom';
-import { Navbar } from '../Components/Navbar';
-import { EpicTable } from '../Components/EpicTable';
+import { EpicCreationForm, Navbar, EpicTable } from '../Components';
 import { getEpicId } from '../Store/Selectors/epic.selector';
 
 import 'antd/dist/antd.css';
