@@ -74,6 +74,7 @@ query MyStories ($epicID: ID!){
                 links
                 description
                 version
+                actualEstimate
             }
         }
     }
