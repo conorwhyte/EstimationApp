@@ -1,34 +1,53 @@
 import React from 'react';
-import { Layout, Divider, Menu } from 'antd';
+import { Layout, Divider, Collapse, Icon } from 'antd';
+
+const { Panel } = Collapse;
 const { Sider } = Layout;
-const { SubMenu } = Menu;
 
-export const StoriesDrawer = props => {
+export const StoriesDrawer = React.memo(function MyComponent(props) {
   const storiesData = props.stories.map(item => (
-    <StoryItem item={item} key={item.id} viewStory={props.viewStory} />
+    <Panel header={item.title} key={item.id} extra={genExtra(props.viewStory, item.id)} disabled={item.estimates.items <= 0}>
+       <ul>
+        { item.estimates.items.map(item => (
+            <p key={item.id}>{item.user.charAt(0).toUpperCase() + item.user.slice(1)}: {item.estimate}</p>
+        ))}
+         <b> Actual: {item.actualEstimate} </b>
+      </ul>
+    </Panel>
   ));
-
+  
   return (
     <Sider
       width={280}
       reverseArrow={true}
-      style={{ background: '#fff' }}
+      style={{ background: '#fff', top: '-25px', borderLeft: '1px solid #d9d9d9' }}
       collapsible={false}
       collapsedWidth={0}
       defaultCollapsed={false}
     >
-      <h3>Stories</h3>
-      {storiesData}
+      <h3 style={{paddingLeft: '15px', paddingTop: '10px'}}> Stories </h3>
+      <Collapse defaultActiveKey={['1']} bordered={false}>
+        {storiesData}
+      </Collapse>
     </Sider>
   );
-};
+});
 
-const StoryItem = props => (
-  <div style={{ paddingTop: '10px' }}>
-    <span style={{ padding: '0 5px' }}> {props.item.title} </span>
-
-    <a onClick={() => props.viewStory(props.item.id)}>View</a>
-    <Divider type="vertical" />
-    <a onClick={() => null}>Expand</a>
-  </div>
+const genExtra = (viewStory, id) => (
+  <>
+    <Icon
+      type="eye"
+      onClick={event => {
+        viewStory(id);
+        event.stopPropagation();
+      }}
+    />
+    <span style={{padding: '0 5px'}} />
+    <Icon
+      type="delete"
+      onClick={event => {
+        event.stopPropagation();
+      }}
+    />
+  </>
 );

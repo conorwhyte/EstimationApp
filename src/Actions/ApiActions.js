@@ -75,6 +75,13 @@ query MyStories ($epicID: ID!){
                 description
                 version
                 actualEstimate
+                estimates (limit: 10) {
+                  items {
+                      id
+                      estimate
+                      user                
+                  }
+              }
             }
         }
     }
