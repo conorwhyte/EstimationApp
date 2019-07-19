@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, InputNumber } from 'antd';
 
-export const CompleteStoryModal = props => {
+export const CompleteStoryModal = React.memo(props => {
   const [storyWAG, setStoryWAG] = useState(props.storyWAG);
 
   useEffect(() => {
@@ -33,4 +33,4 @@ export const CompleteStoryModal = props => {
       </div>
     </Modal>
   );
-};
+});

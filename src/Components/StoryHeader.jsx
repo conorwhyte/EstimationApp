@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 
-export const StoryHeader = props => {
+export const StoryHeader = React.memo(props => {
   return (
     <div className="Estimation-body-header">
       <h3> Pick a story to be estimated or create one </h3>
@@ -27,4 +27,4 @@ export const StoryHeader = props => {
       <Button type="danger"> Delete Story</Button>
     </div>
   );
-};
+});

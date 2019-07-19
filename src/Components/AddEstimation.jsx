@@ -6,7 +6,7 @@ const cardStyle = {
   textAlign: 'center',
 };
 
-export const AddEstimation = props => {
+export const AddEstimation = React.memo(props => {
   const [estimate, setEstimate] = useState(0);
 
   return (
@@ -60,4 +60,4 @@ export const AddEstimation = props => {
       </Button>
     </div>
   );
-};
+});

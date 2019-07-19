@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
 
-// interface AddStoryProps {
-//     visible?: boolean;
-//     loading?: boolean;
-//     createStory: (storyTitle: string) => void;
-// }
-
-export const AddStoryModal = props => {
+export const AddStoryModal = React.memo(props => {
   const [storyTitle, setStoryTitle] = useState('');
 
   const changeTitle = event => {
@@ -36,4 +30,4 @@ export const AddStoryModal = props => {
       </div>
     </Modal>
   );
-};
+});

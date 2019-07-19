@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeader, Divider } from 'antd';
 
-export const Navbar = props => {
+export const Navbar = React.memo(props => {
   const componentProps = {
     onBack: props.title
       ? () => {
@@ -19,4 +19,4 @@ export const Navbar = props => {
       <Divider />
     </>
   );
-};
+});
