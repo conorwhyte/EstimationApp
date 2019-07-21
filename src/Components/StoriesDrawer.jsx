@@ -24,6 +24,8 @@ export const StoriesDrawer = React.memo(props => {
     </Panel>
   ));
 
+  const totalWAG = props.stories.reduce(( a, b ) => a + b.actualEstimate, 0);
+
   return (
     <Sider
       width={280}
@@ -37,7 +39,11 @@ export const StoriesDrawer = React.memo(props => {
       collapsedWidth={0}
       defaultCollapsed={false}
     >
-      <h3 style={{ paddingLeft: '15px', paddingTop: '10px' }}> Stories </h3>
+      <div style={{ paddingLeft: '15px', paddingTop: '10px' }}>
+        <h3> Stories </h3>
+        <h4> Total: <b>{totalWAG.toFixed(2)}</b></h4>
+      </div>
+      
       <Collapse defaultActiveKey={['1']} bordered={false}>
         {storiesData}
       </Collapse>
