@@ -23,6 +23,7 @@ import {
   CompleteStoryModal,
   Navbar,
   StoriesDrawer,
+  EstimationContainer,
   StoryHeader,
 } from '../Components';
 import { getCurrentStoryId, getAverageEstimate } from '../Store/Selectors/story.selector';
@@ -167,14 +168,12 @@ class Estimation extends Component {
     const { Content } = Layout;
     const currentStory = getCurrentStory(stories, storyId);
     const addStoryModalProps = {
-      loading: false,
       createStory: this.createStory,
       showCreateModal: this.showCreateModal,
       visible: showCreateStoryModal,
     };
 
     const completeStoryModalProps = {
-      loading: false,
       completeStory: this.clearAndUpdateStory,
       showCreateModal: this.showCompleteModal,
       visible: showCompleteStoryModal,
@@ -207,7 +206,7 @@ class Estimation extends Component {
       <>
         <Navbar title={currentEpic.title} history={history} />
         <Layout style={{ background: '#fff' }}>
-          {content}
+          <EstimationContainer username={authData.username} />
           <StoriesDrawer listEstimates={this.listEstimates} stories={stories} />
         </Layout>
       </>

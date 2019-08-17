@@ -8,6 +8,7 @@ import { StoryHeader } from './StoryHeader';
 import { StoriesDrawer } from './StoriesDrawer';
 import { EpicCreationForm } from './EpicCreationForm';
 import { EpicTable } from './EpicTable';
+import { EstimationContainer } from './EstimateContainer';
 
 export {
   Navbar,
@@ -20,4 +21,5 @@ export {
   StoriesDrawer,
   EpicCreationForm,
   EpicTable,
+  EstimationContainer,
 };
