@@ -10,7 +10,7 @@ import {
   CompleteStoryModal,
   StoryHeader,
 } from '.';
-import { createStoryForQuiz, clearCurrentStory, listEpicStories, getEpicStories } from '../Actions';
+import { createStoryForQuiz, clearCurrentStory, listEpicStories } from '../Actions';
 import { parse } from 'query-string';
 
 const getCurrentStory = (stories, storyId) =>
@@ -26,7 +26,6 @@ export const EstimationContainer = props => {
   const [ showCreateStoryModal, showCreateModal ] = useState(false);
   const [ showCompleteStoryModal, showCompleteModal ] = useState(false);
   const { id } = parse(location.search);
-
   const currentStory = getCurrentStory(stories, storyId);
   
   const createStory = async input => {
@@ -42,13 +41,9 @@ export const EstimationContainer = props => {
     await completeStory({ storyId, version }, value);
   };
 
-  const getEpicStories = async () => {
-    return await listEpicStories(id);
-  };
-
   useEffect(() => {
     async function fetchMyAPI() {
-      const { data } = await getEpicStories();
+      const { data } = await listEpicStories(id);
       setStories(data.getEpic.stories.items);
     }  
   
