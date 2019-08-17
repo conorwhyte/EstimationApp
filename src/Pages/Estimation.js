@@ -38,9 +38,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const getCurrentStory = (stories, storyId) =>
-  stories.filter(item => item.id === storyId)[0];
-
 const subscription = API.graphql(
   graphqlOperation(subscriptions.onCreateEstimate)
 );
@@ -51,9 +48,6 @@ class Estimation extends Component {
 
     this.state = {
       ...props.location.state,
-      storyTitle: '',
-      showCreateStoryModal: false,
-      showCompleteStoryModal: false,
       currentEpic: {},
       stories: [],
     };
@@ -63,11 +57,7 @@ class Estimation extends Component {
     const { search } = this.props.location;
     const { id } = parse(search);
     const result = await getEpicForId(id);
-    const storiesData = await this.getEpicStories();
-    const currentEpic = {
-      id,
-      title: result.data.getEpic.title,
-    };
+    const storiesData = await listEpicStories(id);
 
     subscription.subscribe({
       next: data => {
@@ -80,7 +70,10 @@ class Estimation extends Component {
     });
 
     this.setState({
-      currentEpic,
+      currentEpi: {
+        id,
+        title: result.data.getEpic.title,
+      },
       stories: storiesData.data.getEpic.stories.items,
     });
   }
@@ -89,13 +82,6 @@ class Estimation extends Component {
     Auth.currentAuthenticatedUser().then(user => {
       this.setState({ user });
     });
-  };
-
-  getEpicStories = async () => {
-    const { search } = this.props.location;
-    const { id } = parse(search);
-
-    return await listEpicStories(id);
   };
 
   listEstimates = async storyId => {

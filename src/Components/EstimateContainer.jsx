@@ -10,7 +10,7 @@ import {
   CompleteStoryModal,
   StoryHeader,
 } from '.';
-import { createStoryForQuiz, clearCurrentStory, listEpicStories } from '../Actions';
+import { createStoryForQuiz, clearCurrentStory, listEpicStories, completeStory } from '../Actions';
 import { parse } from 'query-string';
 
 const getCurrentStory = (stories, storyId) =>
