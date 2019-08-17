@@ -1,15 +1,25 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Layout, Collapse, Icon } from 'antd';
+import { addStoryId } from '../Actions';
 
 const { Panel } = Collapse;
 const { Sider } = Layout;
 
 export const StoriesDrawer = React.memo(props => {
+  const dispatch = useDispatch();
+
+  const addCurrentStory = story => {
+    dispatch(addStoryId(story));
+    
+    props.listEstimates(story);
+  };
+
   const storiesData = props.stories.map(item => (
     <Panel
       header={item.title}
       key={item.id}
-      extra={genExtra(props.viewStory, item.id)}
+      extra={genExtra(addCurrentStory, item.id)}
       disabled={item.estimates.items <= 0}
     >
       <ul>

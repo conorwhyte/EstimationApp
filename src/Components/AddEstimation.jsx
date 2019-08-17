@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux'
 import { Row, Col, InputNumber, Card, Button } from 'antd';
+import { getCurrentStoryId } from '../Store/Selectors/story.selector';
+import { addEstimateForStory } from '../Actions';
 
 const cardStyle = (showBorder) => { 
   return {
@@ -25,7 +28,12 @@ const estimateCard = (value, setEstimate, currentEstimate) => (
 export const AddEstimation = React.memo(props => {
   const [estimate, setEstimate] = useState(0);
   const estimates = [ 0.5, 0.25, 0.1 ];
+  const storyId = useSelector(getCurrentStoryId);  
 
+  const addEstimate = () => {
+    addEstimateForStory(storyId, estimate, props.username);
+  };
+  
   return (
     <div className="Estimation-body-cards">
       <h2>{props.storyTitle}</h2>
@@ -45,7 +53,7 @@ export const AddEstimation = React.memo(props => {
       <br />
       
       <Button
-        onClick={() => props.sendEstimate(estimate)}
+        onClick={addEstimate}
         style={{ margin: 0 }}
       >
         {' '}

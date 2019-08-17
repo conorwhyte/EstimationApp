@@ -8,10 +8,8 @@ import {
   createStoryForQuiz,
   getEpicForId,
   listEpicStories,
-  addEstimateForStory,
   listStoriesEstimate,
   completeStory,
-  addStoryId,
   addEstimateToStory,
   bulkAddEstimatesToStories,
   clearCurrentStory,
@@ -21,30 +19,24 @@ import * as subscriptions from '../graphql/subscriptions';
 import {
   AddStoryModal,
   AddEstimation,
-  UserAvatar,
+  UserEstimates,
   CompleteStoryModal,
   Navbar,
   StoriesDrawer,
   StoryHeader,
 } from '../Components';
-import {
-  getCurrentStoryId,
-  getEstimatesForStories,
-} from '../Store/Selectors/story.selector';
+import { getCurrentStoryId, getAverageEstimate } from '../Store/Selectors/story.selector';
 import './Estimation.scss';
 
 Amplify.configure(aws_exports);
 
 const mapStateToProps = state => ({
   storyId: getCurrentStoryId(state),
-  estimateForStories: getEstimatesForStories(state),
+  averageWAG: getAverageEstimate(state),
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    addCurrentStoryId: id => {
-      dispatch(addStoryId(id));
-    },
     addEstimateForStory: (user, estimate) => {
       dispatch(addEstimateToStory(user, estimate));
     },
@@ -156,18 +148,6 @@ class Estimation extends Component {
     await completeStory({ storyId, version }, value);
   };
 
-  addCurrentStory = story => {
-    const { addCurrentStoryId } = this.props;
-    addCurrentStoryId(story);
-
-    this.listEstimates(story);
-  };
-
-  sendEstimate = async estimate => {
-    const { storyId, authData } = this.props;
-    await addEstimateForStory(storyId, estimate, authData.username);
-  };
-
   listEstimates = async storyId => {
     const { bulkAddEstimatesForStory } = this.props;
     const estimates = await listStoriesEstimate(storyId);
@@ -183,7 +163,7 @@ class Estimation extends Component {
       stories,
       showCompleteStoryModal,
     } = this.state;
-    const { history, storyId, estimateForStories } = this.props;
+    const { history, storyId, authData, averageWAG } = this.props;
     const { Content } = Layout;
     const currentStory = getCurrentStory(stories, storyId);
     const addStoryModalProps = {
@@ -193,10 +173,6 @@ class Estimation extends Component {
       visible: showCreateStoryModal,
     };
 
-    const averageWAG =
-      estimateForStories.reduce((a, b) => a + b.estimate, 0) /
-      estimateForStories.length;
-
     const completeStoryModalProps = {
       loading: false,
       completeStory: this.clearAndUpdateStory,
@@ -205,44 +181,24 @@ class Estimation extends Component {
       storyWAG: averageWAG.toFixed(2),
     };
 
-    const users = estimateForStories.map(item => (
-      <UserAvatar key={item.id} user={item.user} estimate={item.estimate} />
-    ));
-
-    if (averageWAG > 0) {
-      users.push(
-        <UserAvatar
-          key="Average"
-          user="Average"
-          estimate={averageWAG.toFixed(2)}
-        />
-      );
-    }
-
     const content = (
       <Content>
         <div className="Estimation-body">
           <StoryHeader
             showCreateModal={this.showCreateModal}
-            showCompleteModal={this.showCompleteModal}
-          />
+            showCompleteModal={this.showCompleteModal} />
 
           <AddStoryModal {...addStoryModalProps} />
 
           <CompleteStoryModal {...completeStoryModalProps} />
 
-          {currentStory && (
+          {currentStory && 
             <AddEstimation
               storyTitle={currentStory.title || ''}
-              sendEstimate={this.sendEstimate}
-            />
-          )}
+              username={authData.username} />
+          }
 
-          <div style={{ padding: '20px 0' }} />
-
-          {users}
-
-          <br />
+          <UserEstimates />
         </div>
       </Content>
     );
@@ -252,7 +208,7 @@ class Estimation extends Component {
         <Navbar title={currentEpic.title} history={history} />
         <Layout style={{ background: '#fff' }}>
           {content}
-          <StoriesDrawer viewStory={this.addCurrentStory} stories={stories} />
+          <StoriesDrawer listEstimates={this.listEstimates} stories={stories} />
         </Layout>
       </>
     );
