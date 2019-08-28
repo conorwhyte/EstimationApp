@@ -8,7 +8,10 @@ import { Provider } from 'react-redux';
 import rootReducer from './Store/Reducers';
 import { createEpicMiddleware } from 'redux-observable';
 import { rootEpic } from './Store/Epics/index';
+
+import 'antd/dist/antd.css';
 import './index.css';
+import 'babel-polyfill';
 
 const epicMiddleware = createEpicMiddleware();
 const store = createStore(rootReducer, applyMiddleware(epicMiddleware));

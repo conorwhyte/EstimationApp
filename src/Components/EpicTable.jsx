@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Divider } from 'antd';
+import useReactRouter from 'use-react-router';
+import { useDispatch } from 'react-redux';
+import { addEpicId } from '../Actions/epic.action';
+import { listEpicsForUser } from '../Actions/api.service';
 
 const generateColumns = (viewEpic, deleteEpic) => {
   return [
@@ -36,11 +40,45 @@ const populateData = listOfEpics =>
     };
   });
 
-export const EpicTable = props => (
-  <div className="Home-body-section" style={{ marginTop: '20px' }}>
-    <Table
-      dataSource={populateData(props.listOfEpics)}
-      columns={generateColumns(props.viewEpic, props.deleteEpic)}
-    />
-  </div>
-);
+const openSuccessNotification = epicName => {
+  notification['success']({
+    message: 'Successfully deleted epic',
+    description: `Sucessfully deleted epic ${epicName}`,
+  });
+};
+
+async function listEpics(callback) {
+  const epics = await listEpicsForUser();
+  callback(epics.data.listEpics.items);
+}
+
+export const EpicTable = () => {
+  const dispatch = useDispatch();
+  const { history } = useReactRouter();
+  const [ epics, setEpics ] = useState([]);
+  
+  useEffect(() => {
+    listEpics(setEpics);
+  }, []);
+
+  const viewEpic = ({ key }) => {
+    dispatch(addEpicId(key));
+    history.push(`/estimation?id=${key}`);
+  };
+
+  const deleteEpic = async ({ key, name }) => {
+    await deleteEpicForUser(key);
+    openSuccessNotification(name);
+
+    listEpics(setEpics);
+  };
+
+  return (
+    <div className="Home-body-section">
+      <Table
+        dataSource={populateData(epics)}
+        columns={generateColumns(viewEpic, deleteEpic)}
+      />
+    </div>
+  );
+};
