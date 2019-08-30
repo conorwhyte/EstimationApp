@@ -10,7 +10,7 @@ import {
   CompleteStoryModal,
   StoryHeader,
 } from '.';
-import { createStoryForQuiz, clearCurrentStory, listEpicStories, completeStory } from '../Actions';
+import { createStoryForEpic, clearCurrentStory, listEpicStories, completeStory } from '../Actions';
 import { parse } from 'query-string';
 
 const getCurrentStory = (stories, storyId) =>
@@ -29,7 +29,7 @@ export const EstimationContainer = props => {
   const currentStory = getCurrentStory(stories, storyId);
   
   const createStory = async input => {
-    await createStoryForQuiz(id, input);
+    await createStoryForEpic(id, input);
   };
 
   const clearAndUpdateStory = async value => {

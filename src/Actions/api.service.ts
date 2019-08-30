@@ -6,7 +6,7 @@ import { getEpic, listEpics } from '../graphql/queries';
 import { CreateStoryInput, DeleteEpicInput, UpdateStoryInput, CreateEstimateInput } from '../API';
 import 'babel-polyfill'
 
-export async function createStoryForQuiz(epicId, title) {
+export async function createStoryForEpic(epicId, title) {
   const createStoryInput: CreateStoryInput = {
     title: title,
     epicStoriesId: epicId,
@@ -68,8 +68,7 @@ const GqlRetry = async (query, variables) => {
       const response = await API.graphql(graphqlOperation(query, variables))
       console.log('GraphQL result', {result: response, query: query, vars: variables})
       return response
-    },
-    {
+    }, {
       retries: 3,
     }
   )

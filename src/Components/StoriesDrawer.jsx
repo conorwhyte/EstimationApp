@@ -1,7 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Layout, Collapse, Icon } from 'antd';
-import { addStoryId } from '../Actions';
+import { 
+  addStoryId, 
+  bulkAddEstimatesToStories, 
+  listStoriesEstimate 
+} from '../Actions';
 
 const { Panel } = Collapse;
 const { Sider } = Layout;
@@ -12,7 +16,14 @@ export const StoriesDrawer = React.memo(props => {
   const addCurrentStory = story => {
     dispatch(addStoryId(story));
     
-    props.listEstimates(story);
+    listEstimates(story);
+  };
+
+  const listEstimates = async storyId => {
+    const estimates = await listStoriesEstimate(storyId);
+    const { items } = estimates.data.getStory.estimates;
+
+    dispatch(bulkAddEstimatesToStories(items));
   };
 
   const storiesData = props.stories.map(item => (
@@ -36,8 +47,7 @@ export const StoriesDrawer = React.memo(props => {
 
   const totalWAG = props.stories.reduce(( a, b ) => a + b.actualEstimate, 0);
 
-  return (
-    <Sider
+  return ( <Sider
       width={280}
       reverseArrow={true}
       style={{

@@ -7,9 +7,7 @@ import { parse } from 'query-string';
 import {
   getEpicForId,
   listEpicStories,
-  listStoriesEstimate,
   addEstimateToStory,
-  bulkAddEstimatesToStories,
 } from '../Actions';
 import { Layout } from 'antd';
 import * as subscriptions from '../graphql/subscriptions';
@@ -31,9 +29,6 @@ const mapDispatchToProps = dispatch => {
   return {
     addEstimateForStory: (user, estimate) => {
       dispatch(addEstimateToStory(user, estimate));
-    },
-    bulkAddEstimatesForStory: estimates => {
-      dispatch(bulkAddEstimatesToStories(estimates));
     },
   };
 };
@@ -84,14 +79,6 @@ class Estimation extends Component {
     });
   };
 
-  listEstimates = async storyId => {
-    const { bulkAddEstimatesForStory } = this.props;
-    const estimates = await listStoriesEstimate(storyId);
-    const { items } = estimates.data.getStory.estimates;
-
-    bulkAddEstimatesForStory(items);
-  };
-
   render() {
     const { currentEpic, stories } = this.state;
     const { history, authData } = this.props;
@@ -101,7 +88,7 @@ class Estimation extends Component {
         <Navbar title={currentEpic.title} history={history} />
         <Layout style={{ background: '#fff' }}>
           <EstimationContainer username={authData.username} />
-          <StoriesDrawer listEstimates={this.listEstimates} stories={stories} />
+          <StoriesDrawer stories={stories} />
         </Layout>
       </>
     );
