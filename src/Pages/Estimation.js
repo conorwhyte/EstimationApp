@@ -6,7 +6,6 @@ import aws_exports from '../aws-exports'; // specify the location of aws-exports
 import { parse } from 'query-string';
 import {
   getEpicForId,
-  listEpicStories,
   addEstimateToStory,
 } from '../Actions';
 import { Layout } from 'antd';
@@ -44,7 +43,6 @@ class Estimation extends Component {
     this.state = {
       ...props.location.state,
       currentEpic: {},
-      stories: [],
     };
   }
 
@@ -52,7 +50,6 @@ class Estimation extends Component {
     const { search } = this.props.location;
     const { id } = parse(search);
     const result = await getEpicForId(id);
-    const storiesData = await listEpicStories(id);
 
     subscription.subscribe({
       next: data => {
@@ -65,11 +62,10 @@ class Estimation extends Component {
     });
 
     this.setState({
-      currentEpi: {
+      currentEpic: {
         id,
         title: result.data.getEpic.title,
       },
-      stories: storiesData.data.getEpic.stories.items,
     });
   }
 
@@ -80,15 +76,15 @@ class Estimation extends Component {
   };
 
   render() {
-    const { currentEpic, stories } = this.state;
-    const { history, authData } = this.props;
+    const { currentEpic } = this.state;
+    const { authData } = this.props;
 
     return (
       <>
-        <Navbar title={currentEpic.title} history={history} />
+        <Navbar title={currentEpic.title} />
         <Layout style={{ background: '#fff' }}>
           <EstimationContainer username={authData.username} />
-          <StoriesDrawer stories={stories} />
+          <StoriesDrawer />
         </Layout>
       </>
     );
