@@ -16,5 +16,4 @@ export const Home = () => <>
   </div>
 </>;
 
-
 export default (withAuthenticator(Home, { includeGreetings: false }));

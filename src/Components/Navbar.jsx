@@ -3,6 +3,7 @@ import { PageHeader, Divider } from 'antd';
 import { parse } from 'query-string';
 import useReactRouter from 'use-react-router';
 import { getEpicForId } from '../Actions';
+import { EstimateScale } from './EstimateScale';
 
 export const Navbar = React.memo(props => {
   const { location, history } = useReactRouter();
@@ -32,8 +33,11 @@ export const Navbar = React.memo(props => {
       <PageHeader
         title={title || 'Estimation tool'}
         {...componentProps}
+        extra={[
+          <EstimateScale />,
+        ]}
       />
-      <Divider />
+      <Divider style={{marginTop: 0}}/>
     </>
   );
 });
