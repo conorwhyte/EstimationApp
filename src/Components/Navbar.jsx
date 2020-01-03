@@ -4,6 +4,7 @@ import { parse } from 'query-string';
 import useReactRouter from 'use-react-router';
 import { getEpicForId } from '../Actions';
 import { EstimateScale } from './EstimateScale';
+import './Navbar.scss';
 
 export const Navbar = React.memo(props => {
   const { location, history } = useReactRouter();
@@ -34,7 +35,7 @@ export const Navbar = React.memo(props => {
         title={title || 'Estimation tool'}
         {...componentProps}
         extra={[
-          <EstimateScale />,
+          <EstimateScale user={props.user}/>,
         ]}
       />
       <Divider style={{marginTop: 0}}/>

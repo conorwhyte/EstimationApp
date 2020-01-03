@@ -50,6 +50,8 @@ class Estimation extends Component {
     const { search } = this.props.location;
     const { id } = parse(search);
     const result = await getEpicForId(id);
+    
+    this.getCurrentUser();
 
     subscription.subscribe({
       next: data => {
@@ -76,12 +78,12 @@ class Estimation extends Component {
   };
 
   render() {
-    const { currentEpic } = this.state;
+    const { currentEpic, user } = this.state;
     const { authData } = this.props;
 
     return (
       <>
-        <Navbar title={currentEpic.title} />
+        <Navbar title={currentEpic.title} user={user} />
         <Layout style={{ background: '#fff' }}>
           <EstimationContainer username={authData.username} />
           <StoriesDrawer />

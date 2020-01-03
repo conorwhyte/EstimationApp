@@ -1,7 +1,7 @@
 import React from 'react';
-import { Menu, Dropdown, Icon } from 'antd';
+import { Menu, Dropdown, Icon, Avatar } from 'antd';
 
-export const EstimateScale = React.memo(() => {
+export const EstimateScale = React.memo(props => {
   const menu = (
     <Menu>
       <Menu.Item>
@@ -17,11 +17,25 @@ export const EstimateScale = React.memo(() => {
     </Menu>
   );
 
+  const username = props.user ? props.user.username : '';
   return (
-    <Dropdown overlay={menu}>
-      <a className="ant-dropdown-link" href="#">
-        Estimation scale &nbsp;<Icon type="down" />
-      </a>
-    </Dropdown>
+    <span>
+      <Avatar
+        style={{
+          backgroundColor: '#0067e6',
+          verticalAlign: 'middle',
+          marginRight: '10px',
+        }}
+        size={40}
+      >
+        {username}
+      </Avatar>
+      
+      <Dropdown overlay={menu}>
+        <a className="ant-dropdown-link" href="#">
+          Estimation scale &nbsp;<Icon type="down" />
+        </a>
+      </Dropdown>
+    </span>
   );
-});
+}); 
