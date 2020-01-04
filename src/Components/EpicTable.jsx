@@ -22,9 +22,9 @@ const generateColumns = (viewEpic, deleteEpic) => {
       key: 'action',
       render: key => (
         <span>
-          <a onClick={() => viewEpic(key)}>View</a>
+          <a href onClick={() => viewEpic(key)}>View</a>
           <Divider type="vertical" />
-          <a onClick={() => deleteEpic(key)}>Delete</a>
+          <a href onClick={() => deleteEpic(key)}>Delete</a>
         </span>
       ),
     },
@@ -41,10 +41,10 @@ const populateData = listOfEpics =>
   });
 
 const openSuccessNotification = epicName => {
-  notification['success']({
-    message: 'Successfully deleted epic',
-    description: `Sucessfully deleted epic ${epicName}`,
-  });
+  // notification['success']({
+  //   message: 'Successfully deleted epic',
+  //   description: `Sucessfully deleted epic ${epicName}`,
+  // });
 };
 
 async function listEpics(callback) {
@@ -67,7 +67,7 @@ export const EpicTable = () => {
   };
 
   const deleteEpic = async ({ key, name }) => {
-    await deleteEpicForUser(key);
+    // await deleteEpicForUser(key);
     openSuccessNotification(name);
 
     listEpics(setEpics);

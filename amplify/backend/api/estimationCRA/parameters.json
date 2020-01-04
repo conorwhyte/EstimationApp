@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "estimationCRA",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authestimationcra698e7d9f",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

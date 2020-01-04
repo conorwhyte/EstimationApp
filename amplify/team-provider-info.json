@@ -1,0 +1,20 @@
+{
+    "estimate": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-estimation-cra-estimate-02140-authRole",
+            "UnauthRoleArn": "arn:aws:iam::744962777212:role/amplify-estimation-cra-estimate-02140-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::744962777212:role/amplify-estimation-cra-estimate-02140-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-estimation-cra-estimate-02140-deployment",
+            "UnauthRoleName": "amplify-estimation-cra-estimate-02140-unauthRole",
+            "StackName": "amplify-estimation-cra-estimate-02140",
+            "StackId": "arn:aws:cloudformation:eu-west-1:744962777212:stack/amplify-estimation-cra-estimate-02140/2ef660f0-2e88-11ea-b836-0a62b96e8314",
+            "AmplifyAppId": "d12yhara9ledtu"
+        },
+        "categories": {
+            "auth": {
+                "estimationcra698e7d9f": {}
+            }
+        }
+    }
+}

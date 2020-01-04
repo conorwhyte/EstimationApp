@@ -18,7 +18,6 @@ export const getEpic = `query GetEpic($id: ID!) {
         tags
         links
         avgEstimate
-        actualEstimate
         version
       }
       nextToken
@@ -58,7 +57,6 @@ export const getStory = `query GetStory($id: ID!) {
     tags
     links
     avgEstimate
-    actualEstimate
     estimates {
       items {
         id
@@ -86,7 +84,6 @@ export const listStories = `query ListStories(
       tags
       links
       avgEstimate
-      actualEstimate
       estimates {
         nextToken
       }
@@ -109,7 +106,6 @@ export const getEstimate = `query GetEstimate($id: ID!) {
       tags
       links
       avgEstimate
-      actualEstimate
       estimates {
         nextToken
       }
@@ -137,7 +133,6 @@ export const listEstimates = `query ListEstimates(
         tags
         links
         avgEstimate
-        actualEstimate
         version
       }
       version

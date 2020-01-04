@@ -14,7 +14,7 @@ const initialState: AppState = {
   estimateScale: EstimationScale.Wag,
 }
 
-const epic = (state = initialState, action) => {
+const epic = (state = initialState, action: any) => {
   switch (action.type) {
     case ADD_EPIC_ID:
       return {

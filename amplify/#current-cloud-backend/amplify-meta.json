@@ -1,35 +1,62 @@
 {
 	"providers": {
 		"awscloudformation": {
-			"AuthRoleName": "stimationool-20190320000234-authRole",
-			"UnauthRoleArn": "arn:aws:iam::744962777212:role/stimationool-20190320000234-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::744962777212:role/stimationool-20190320000234-authRole",
+			"AuthRoleName": "amplify-estimation-cra-estimate-02140-authRole",
+			"UnauthRoleArn": "arn:aws:iam::744962777212:role/amplify-estimation-cra-estimate-02140-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::744962777212:role/amplify-estimation-cra-estimate-02140-authRole",
 			"Region": "eu-west-1",
-			"DeploymentBucketName": "stimationool-20190320000234-deployment",
-			"UnauthRoleName": "stimationool-20190320000234-unauthRole",
-			"StackName": "stimationool-20190320000234",
-			"StackId": "arn:aws:cloudformation:eu-west-1:744962777212:stack/stimationool-20190320000234/7742ec30-4aa3-11e9-9945-066e26fb3d78"
+			"DeploymentBucketName": "amplify-estimation-cra-estimate-02140-deployment",
+			"UnauthRoleName": "amplify-estimation-cra-estimate-02140-unauthRole",
+			"StackName": "amplify-estimation-cra-estimate-02140",
+			"StackId": "arn:aws:cloudformation:eu-west-1:744962777212:stack/amplify-estimation-cra-estimate-02140/2ef660f0-2e88-11ea-b836-0a62b96e8314",
+			"AmplifyAppId": "d12yhara9ledtu"
 		}
 	},
 	"auth": {
-		"cognitobd2d0787": {
+		"estimationcra698e7d9f": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/stimationool-20190320000234-deployment/amplify-cfn-templates/auth/cognitobd2d0787-cloudformation-template.yml",
-				"logicalId": "authcognitobd2d0787"
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-estimation-cra-estimate-02140-deployment/amplify-cfn-templates/auth/estimationcra698e7d9f-cloudformation-template.yml",
+				"logicalId": "authestimationcra698e7d9f"
 			},
-			"lastPushTimeStamp": "2019-08-31T17:07:35.568Z",
+			"lastPushTimeStamp": "2020-01-04T00:40:31.189Z",
 			"output": {
-				"AppClientSecret": "f1ifsegg1dfshp8cckos20kkcd4j1auckbrt5j8vq83t7dkffk",
-				"UserPoolId": "eu-west-1_JgUBM5OgT",
-				"AppClientIDWeb": "2lhfab48clei025pd6bd4iesr5",
-				"AppClientID": "618uqgjlirgfd22vjabv4gfrc2",
-				"IdentityPoolId": "eu-west-1:6cbe15bf-9f70-4cb8-a514-87feec7936af",
-				"IdentityPoolName": "cognitobd2d0787_identitypool_bd2d0787",
-				"UserPoolName": "cognitobd2d0787_userpool_bd2d0787"
+				"AppClientSecret": "16i412o5st8rho2jgll6ms9gm9n127mgflqjuao94s7oallpvlde",
+				"UserPoolId": "eu-west-1_KgqectlSi",
+				"AppClientIDWeb": "6fnt0e7b4cmeech5np4pua6u49",
+				"AppClientID": "3mo1eilo1hncrpslnm88a48pcq",
+				"IdentityPoolId": "eu-west-1:851c1695-aabf-40d1-a504-08af52edf956",
+				"IdentityPoolName": "estimationcra698e7d9f_identitypool_698e7d9f__estimate",
+				"UserPoolName": "estimationcra698e7d9f_userpool_698e7d9f"
 			},
-			"lastPushDirHash": "lh9Nf3HQ4KHM2Lau94f9Mw1ZeuY="
+			"lastPushDirHash": "9lAiMz1sGmvedI+zLc05inIrvIU="
+		}
+	},
+	"api": {
+		"estimationCRA": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authestimationcra698e7d9f"
+						}
+					}
+				},
+				"GraphQLAPIIdOutput": "r47vxotgjnhpfa4v3sv3sgo2f4",
+				"GraphQLAPIEndpointOutput": "https://g4ckyuiolzcrraw6fb3ggrk6a4.appsync-api.eu-west-1.amazonaws.com/graphql"
+			},
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-estimation-cra-estimate-02140-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apiestimationCRA"
+			},
+			"lastPushTimeStamp": "2020-01-04T00:40:31.189Z",
+			"lastPushDirHash": "O6bRXnyvzageRLF3kjUhh/kFRQs="
 		}
 	},
 	"hosting": {
@@ -37,41 +64,21 @@
 			"service": "S3AndCloudFront",
 			"providerPlugin": "awscloudformation",
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/stimationool-20190320000234-deployment/amplify-cfn-templates/hosting/template.json",
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-estimation-cra-estimate-02140-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2019-08-31T17:07:35.572Z",
+			"lastPushTimeStamp": "2020-01-04T00:40:31.189Z",
 			"output": {
-				"CloudFrontSecureURL": "https://d3jtndpio5v1x7.cloudfront.net",
-				"S3BucketSecureURL": "https://stimationool-20190320000534-hostingbucket.s3.amazonaws.com",
-				"WebsiteURL": "http://stimationool-20190320000534-hostingbucket.s3-website-eu-west-1.amazonaws.com",
-				"CloudFrontDistributionID": "E18EMAWWPHNF06",
+				"CloudFrontSecureURL": "https://dcb8zpraqxs84.cloudfront.net",
+				"S3BucketSecureURL": "https://estimation-cra-20200104002538-hostingbucket-estimate.s3.amazonaws.com",
+				"CloudFrontOriginAccessIdentity": "E2L8SJX2QB1C8X",
+				"WebsiteURL": "http://estimation-cra-20200104002538-hostingbucket-estimate.s3-website-eu-west-1.amazonaws.com",
+				"CloudFrontDistributionID": "E1WEV51RAVAVF0",
 				"Region": "eu-west-1",
-				"HostingBucketName": "stimationool-20190320000534-hostingbucket",
-				"CloudFrontDomainName": "d3jtndpio5v1x7.cloudfront.net"
+				"HostingBucketName": "estimation-cra-20200104002538-hostingbucket-estimate",
+				"CloudFrontDomainName": "dcb8zpraqxs84.cloudfront.net"
 			},
-			"lastPushDirHash": "ggzvvSM4Rs26Wb8fAJSSY2rYGIQ="
-		}
-	},
-	"api": {
-		"estimationtool": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"securityType": "AMAZON_COGNITO_USER_POOLS",
-				"GraphQLAPIIdOutput": "nef2dtf5ozfvnnyh63e4rmnjeu",
-				"GraphQLAPIEndpointOutput": "https://bbubv7mnzjhcnhzoo2ge24lsja.appsync-api.eu-west-1.amazonaws.com/graphql",
-				"GraphQLAPIKeyOutput": "da2-3ucurbzyojg77kvellgrpfpivm",
-				"AuthCognitoUserPoolIdOutput": "eu-west-1_JgUBM5OgT",
-				"AuthCognitoUserPoolNativeClientId": "See UserPool: eu-west-1_JgUBM5OgT",
-				"AuthCognitoUserPoolJSClientId": "See UserPool: eu-west-1_JgUBM5OgT"
-			},
-			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/stimationool-20190320000234-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-				"logicalId": "apiestimationtool"
-			},
-			"lastPushTimeStamp": "2019-08-31T17:07:41.284Z",
-			"lastPushDirHash": "xMme2Sq8xqh6wD5WAaX2MaDWWwA="
+			"lastPushDirHash": "6WU8m0qi+qvISh+ENWKrQTsYv/k="
 		}
 	}
 }

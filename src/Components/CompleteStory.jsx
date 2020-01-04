@@ -6,30 +6,19 @@ export const CompleteStoryModal = React.memo(props => {
 
   useEffect(() => {
     setStoryWAG(props.storyWAG);
-  });
-
-  const changeWAG = event => {
-    setStoryWAG(event.target.value);
-  };
-
-  const completeStory = () => {
-    props.completeStory(storyWAG);
-  };
-
-  const setModalVisibilty = () => {
-    props.showCreateModal(false);
-  };
+  }, [props.storyWAG]);
 
   return (
     <Modal
       visible={props.visible}
       title="Complete and submit story"
-      onOk={completeStory}
-      onCancel={setModalVisibilty}
+      onOk={() => props.completeStory(storyWAG)}
+      onCancel={() => props.showCreateModal(false)}
     >
       <div>
         <p> Complete story </p>
-        <InputNumber value={storyWAG} onChange={changeWAG} />
+        <InputNumber value={storyWAG} 
+          onChange={event => setStoryWAG(event.target.value)} />
       </div>
     </Modal>
   );

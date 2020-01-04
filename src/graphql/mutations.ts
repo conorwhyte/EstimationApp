@@ -1,8 +1,11 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
-  createEpic(input: $input) {
+export const createEpic = `mutation CreateEpic(
+  $input: CreateEpicInput!
+  $condition: ModelEpicConditionInput
+) {
+  createEpic(input: $input, condition: $condition) {
     id
     title
     description
@@ -18,7 +21,6 @@ export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
         tags
         links
         avgEstimate
-        actualEstimate
         version
       }
       nextToken
@@ -27,8 +29,11 @@ export const createEpic = `mutation CreateEpic($input: CreateEpicInput!) {
   }
 }
 `;
-export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
-  updateEpic(input: $input) {
+export const updateEpic = `mutation UpdateEpic(
+  $input: UpdateEpicInput!
+  $condition: ModelEpicConditionInput
+) {
+  updateEpic(input: $input, condition: $condition) {
     id
     title
     description
@@ -44,7 +49,6 @@ export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
         tags
         links
         avgEstimate
-        actualEstimate
         version
       }
       nextToken
@@ -53,8 +57,11 @@ export const updateEpic = `mutation UpdateEpic($input: UpdateEpicInput!) {
   }
 }
 `;
-export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
-  deleteEpic(input: $input) {
+export const deleteEpic = `mutation DeleteEpic(
+  $input: DeleteEpicInput!
+  $condition: ModelEpicConditionInput
+) {
+  deleteEpic(input: $input, condition: $condition) {
     id
     title
     description
@@ -70,7 +77,6 @@ export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
         tags
         links
         avgEstimate
-        actualEstimate
         version
       }
       nextToken
@@ -79,8 +85,11 @@ export const deleteEpic = `mutation DeleteEpic($input: DeleteEpicInput!) {
   }
 }
 `;
-export const createStory = `mutation CreateStory($input: CreateStoryInput!) {
-  createStory(input: $input) {
+export const createStory = `mutation CreateStory(
+  $input: CreateStoryInput!
+  $condition: ModelStoryConditionInput
+) {
+  createStory(input: $input, condition: $condition) {
     id
     title
     epicStoriesId
@@ -88,7 +97,6 @@ export const createStory = `mutation CreateStory($input: CreateStoryInput!) {
     tags
     links
     avgEstimate
-    actualEstimate
     estimates {
       items {
         id
@@ -102,8 +110,11 @@ export const createStory = `mutation CreateStory($input: CreateStoryInput!) {
   }
 }
 `;
-export const updateStory = `mutation UpdateStory($input: UpdateStoryInput!) {
-  updateStory(input: $input) {
+export const updateStory = `mutation UpdateStory(
+  $input: UpdateStoryInput!
+  $condition: ModelStoryConditionInput
+) {
+  updateStory(input: $input, condition: $condition) {
     id
     title
     epicStoriesId
@@ -111,7 +122,6 @@ export const updateStory = `mutation UpdateStory($input: UpdateStoryInput!) {
     tags
     links
     avgEstimate
-    actualEstimate
     estimates {
       items {
         id
@@ -125,8 +135,11 @@ export const updateStory = `mutation UpdateStory($input: UpdateStoryInput!) {
   }
 }
 `;
-export const deleteStory = `mutation DeleteStory($input: DeleteStoryInput!) {
-  deleteStory(input: $input) {
+export const deleteStory = `mutation DeleteStory(
+  $input: DeleteStoryInput!
+  $condition: ModelStoryConditionInput
+) {
+  deleteStory(input: $input, condition: $condition) {
     id
     title
     epicStoriesId
@@ -134,7 +147,6 @@ export const deleteStory = `mutation DeleteStory($input: DeleteStoryInput!) {
     tags
     links
     avgEstimate
-    actualEstimate
     estimates {
       items {
         id
@@ -148,8 +160,11 @@ export const deleteStory = `mutation DeleteStory($input: DeleteStoryInput!) {
   }
 }
 `;
-export const createEstimate = `mutation CreateEstimate($input: CreateEstimateInput!) {
-  createEstimate(input: $input) {
+export const createEstimate = `mutation CreateEstimate(
+  $input: CreateEstimateInput!
+  $condition: ModelEstimateConditionInput
+) {
+  createEstimate(input: $input, condition: $condition) {
     id
     user
     estimate
@@ -161,7 +176,6 @@ export const createEstimate = `mutation CreateEstimate($input: CreateEstimateInp
       tags
       links
       avgEstimate
-      actualEstimate
       estimates {
         nextToken
       }
@@ -171,8 +185,11 @@ export const createEstimate = `mutation CreateEstimate($input: CreateEstimateInp
   }
 }
 `;
-export const updateEstimate = `mutation UpdateEstimate($input: UpdateEstimateInput!) {
-  updateEstimate(input: $input) {
+export const updateEstimate = `mutation UpdateEstimate(
+  $input: UpdateEstimateInput!
+  $condition: ModelEstimateConditionInput
+) {
+  updateEstimate(input: $input, condition: $condition) {
     id
     user
     estimate
@@ -184,7 +201,6 @@ export const updateEstimate = `mutation UpdateEstimate($input: UpdateEstimateInp
       tags
       links
       avgEstimate
-      actualEstimate
       estimates {
         nextToken
       }
@@ -194,8 +210,11 @@ export const updateEstimate = `mutation UpdateEstimate($input: UpdateEstimateInp
   }
 }
 `;
-export const deleteEstimate = `mutation DeleteEstimate($input: DeleteEstimateInput!) {
-  deleteEstimate(input: $input) {
+export const deleteEstimate = `mutation DeleteEstimate(
+  $input: DeleteEstimateInput!
+  $condition: ModelEstimateConditionInput
+) {
+  deleteEstimate(input: $input, condition: $condition) {
     id
     user
     estimate
@@ -207,7 +226,6 @@ export const deleteEstimate = `mutation DeleteEstimate($input: DeleteEstimateInp
       tags
       links
       avgEstimate
-      actualEstimate
       estimates {
         nextToken
       }

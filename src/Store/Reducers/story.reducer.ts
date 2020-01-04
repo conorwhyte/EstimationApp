@@ -15,7 +15,7 @@ const initialState: AppState = {
   storiesEstimates: [],
 }
 
-const story = (state = initialState, action) => {
+const story = (state = initialState, action: any) => {
   switch (action.type) {
     case ADD_CURRENT_STORY:
       return {

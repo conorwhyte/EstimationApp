@@ -29,7 +29,7 @@ export const StoriesDrawer = React.memo(() => {
     }
 
     listEpics();
-  }, []);
+  }, [location.search]);
 
   const addCurrentStory = story => {
     dispatch(addStoryId(story));

@@ -19,7 +19,7 @@ export const Navbar = React.memo(props => {
     }
 
     if (location.pathname === '/estimation') { getEpic(); }
-  }, []);
+  }, [id, location.pathname]);
   
   const componentProps = {
     onBack: props.title

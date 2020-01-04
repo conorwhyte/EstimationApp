@@ -5,12 +5,12 @@ export const EstimateScale = React.memo(props => {
   const menu = (
     <Menu>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer">
+        <a href target="_blank" rel="noopener noreferrer">
           WAG's
         </a>
       </Menu.Item>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer">
+        <a href target="_blank" rel="noopener noreferrer">
           Story points
         </a>
       </Menu.Item>
@@ -32,7 +32,7 @@ export const EstimateScale = React.memo(props => {
       </Avatar>
       
       <Dropdown overlay={menu}>
-        <a className="ant-dropdown-link" href="#">
+        <a href className="ant-dropdown-link">
           Estimation scale &nbsp;<Icon type="down" />
         </a>
       </Dropdown>

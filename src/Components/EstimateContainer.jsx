@@ -48,7 +48,7 @@ export const EstimationContainer = props => {
     }  
   
     fetchMyAPI();
-  }, []);
+  }, [id]);
 
   return (
     <Layout.Content>
